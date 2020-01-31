@@ -11,6 +11,7 @@ begin
   EngineSet(Width, 1000);
   EngineSet(Height, 667);
   EngineInit('./resources');
+  GoPaint;
   repeat
     DrawScene;
     EngineProcess;
