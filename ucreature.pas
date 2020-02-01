@@ -31,9 +31,9 @@ type
 
 const
     ALL_CREATURES: array[1..NCREATURES] of TCreature = (
-      (Name: 'Тукан';
+      (Name: 'Тукана';
         Layers: (res_Tukan_body, res_Tukan_1, res_Tukan_2, res_Tukan_3);
-        LayerNames: ('Клюв', 'Хвост', 'Глаз');
+        LayerNames: ('нужна замена клюва', 'нужен новый хвост', 'требуется замена глаза');
         Child: Bird;
         Small: res_Tukan_small
         )

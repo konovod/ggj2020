@@ -105,7 +105,7 @@ procedure GoPaint;
 begin
   Scene := Paint;
   PaintColor:=$000000FF;
-  PaintR:=3;
+  PaintR:=10;
   SomeAction := -1;
 end;
 
@@ -353,13 +353,14 @@ begin
   else
     prevx := -1;
   if MouseGet(ScrollPos) <> 0 then
-    AppAngle := AppAngle + MouseGet(ScrollPos);
+    AppAngle := AppAngle + MouseGet(ScrollPos)*4;
 end;
 
 procedure DrawFlight;
 begin
   FontConfig(RES.Vera, 48, BLACK);
-  DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
+  DrawText(RES.Vera, PChar('К вам везут '+AppAnimal^.Name+#13#10'Ему срочно '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
+//  DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
   ProcessDrag;
 end;
 

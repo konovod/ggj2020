@@ -71,7 +71,7 @@ begin
     end;
   //check cells
   cell := FindCell(X, Y);
-  if (cell <> nil) and cell.Filled then
+  if (cell <> nil) and cell.Filled and (Scene = Application) then
   begin
     DragMode := DragChild;
     DragItem := Cell.index;
@@ -79,7 +79,7 @@ begin
     exit;
   end;
   //check child
-  if Assigned(AppCurChild) and InRange(X, ChildX-CellW/2, ChildX+CellW/2) and InRange(Y, ChildY-CellH/2, ChildY-CellH/2) then
+  if Assigned(AppCurChild) and InRange(X, ChildX-CellW, ChildX+CellW) and InRange(Y, ChildY-CellH, ChildY+CellH) then
     begin
       DragMode := DragChild;
       DragItem := -1;
