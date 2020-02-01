@@ -19,6 +19,18 @@ const
   MsgX = 656;
   MsgY = 150;
 
+  BarX = 532;
+  BarY = 323;
+  BarW = 20;
+  BarH = 232;
+
+  ShapeX1 = 460;
+  ShapeY1 = 600;
+  ShapeDX = 80;
+  ShapeDY = 80;
+  ShapeW = 55;
+  ShapeH = 55;
+
 var
   Scene: TScene;
   AppX, AppY, AppAngle: TCoord;
@@ -30,12 +42,18 @@ var
   PaintR: Integer;
   prevx, prevy: TCoord;
 
+
+
 procedure DrawScene;
 
 
 procedure GoPaint;
 procedure GoApplication;
 procedure GoFlight;
+
+
+procedure DrawBasic;
+
 procedure DrawPaint;
 procedure DrawApplication;
 procedure DrawFlight;
@@ -47,6 +65,7 @@ implementation
 
 procedure DrawScene;
 begin
+  DrawBasic;
   case Scene of
     Paint: DrawPaint;
     Application: DrawApplication;
@@ -91,6 +110,19 @@ begin
   AppMissing := Random(NPARTS)+1;
 end;
 
+procedure OneShape(btn: TButton; shp: TSprite; x,y: TCoord);
+begin
+  Button(btn, 0, x, y, ShapeW, ShapeH);
+  SetLayer(101);
+  Sprite(shp, x+ShapeW/2, y+ShapeH/2, 1,1,0,$FF0000FF{PaintColor});
+  SetLayer(1);
+end;
+
+procedure DrawBasic;
+begin
+
+end;
+
 procedure DrawPaint;
 var
   cx, cy,dx,dy,dh, step: TCoord;
@@ -98,6 +130,14 @@ begin
   Background(RES.Back);
   Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,true,$FFFFFF9F);
   Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,false,$000000FF);
+
+  Button(RES.Paint.Bar, 0, BarX, BarY, BarW, BarH);
+
+  OneShape(RES.Paint.Shape1, RES.Paint.Ashape1, ShapeX1, ShapeY1);
+  OneShape(RES.Paint.Shape2, RES.Paint.Ashape2, ShapeX1+ShapeDX, ShapeY1);
+  OneShape(RES.Paint.Shape3, RES.Paint.Ashape3, ShapeX1, ShapeY1+ShapeDY);
+  OneShape(RES.Paint.Shape4, RES.Paint.Ashape4, ShapeX1+ShapeDX, ShapeY1+ShapeDY);
+
   Sprite(RES.Empty, PaintX, PaintY);
 
   cx := MouseGet(CursorX) - (PaintX-PaintW/2);
