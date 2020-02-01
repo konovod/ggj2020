@@ -129,7 +129,9 @@ procedure GoFlight;
 begin
   Scene := Flight;
   AppAnimal := @ALL_CREATURES[Random(NCREATURES)+1];
-  AppMissing := Random(NPARTS)+1;
+  repeat
+    AppMissing := Random(NPARTS)+1;
+  until (not AppAnimal^.WasFixed[AppMissing]) or (random < 0.1);
   SomeAction := GetTickCount64;
 end;
 
@@ -366,6 +368,7 @@ end;
 
 procedure UpdateImage;
 begin
+  AppAnimal^.WasFixed[AppMissing] := True;
   DrawRotatedCrunch(RES.Empty, AppAnimal^.Layers[AppMissing], AppX - PaintX, AppY - PaintY, 1, 1, AppAngle);
   DrawRotatedCrunch(RES.Empty2, Res.Empty, 0,0);
 end;

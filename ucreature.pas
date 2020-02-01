@@ -25,6 +25,7 @@ type
     Small: TSprite;
     PaletteSize: Integer;
     Palette: array[1..MAXPALETTE] of TColor;
+    WasFixed: array[1..NPARTS] of Boolean;
   end;
   PCreature = ^TCreature;
 
