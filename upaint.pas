@@ -388,17 +388,24 @@ begin
 end;
 
 procedure DrawFlight;
+var
+  i, j: integer;
 begin
   FontConfig(RES.Vera, 48, BLACK);
   DrawText(RES.Vera, PChar('К вам везут '+AppAnimal^.Name+#13#10'Ему срочно '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
 //  DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
   ProcessDrag;
+
+
+{  for j := 1 to NCREATURES do
+    for i := 0 to NPARTS do
+      Sprite(ALL_CREATURES[j].Layers[I], 10+j*500, 400);}
 end;
 
 procedure UpdateImage;
 begin
   AppAnimal^.WasFixed[AppMissing] := True;
-  DrawRotatedCrunch(RES.Empty, AppAnimal^.Layers[AppMissing], AppX - AppBaseX, AppY - AppBaseY, 1, 1, AppAngle);
+  DrawRotatedCrunch(RES.Empty, AppAnimal^.Layers[AppMissing], AppX - AppBaseX-10, AppY - AppBaseY-10, 1, 1, AppAngle);
   DrawRotatedCrunch(RES.Empty2, Res.Empty, 0,0);
 end;
 
