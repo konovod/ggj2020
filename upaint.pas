@@ -43,37 +43,6 @@ const
   ColorDX = 110;
   ColorDY = 75;
 
-  CellW = 320;
-  CellH = 206;
-
-  CellX1 = 0;
-  CellY1 = 65;
-
-  CellX2 = -1;
-  CellY2 = 342;
-
-  CellX3 = 1584;
-  CellY3 = 66;
-
-  CellX4 = 1600;
-  CellY4 = 342;
-
-  FoodW = 164;
-  FoodH = 164;
-
-  FoodX1 = 347;
-  FoodY1 = 835;
-  FoodX2 = 562;
-  FoodY2 = 835;
-  FoodX3 = 776;
-  FoodY3 = 835;
-  FoodX4 = 990;
-  FoodY4 = 835;
-  FoodX5 = 1205;
-  FoodY5 = 835;
-  FoodX6 = 1419;
-  FoodY6 = 835;
-
 var
   Scene: TScene;
   AppX, AppY, AppAngle: TCoord;
@@ -112,6 +81,8 @@ procedure UpdateImage;
 procedure BuildPalettes;
 
 implementation
+
+uses uChildren;
 
 procedure DrawScene;
 begin
@@ -233,11 +204,11 @@ begin
 end;
 
 procedure DrawCells;
+var
+  cell: TCell;
 begin
-  Sprite(RES.Cells.Fence, CellX1+CellW/2, CellY1+CellH/2);
-  Sprite(RES.Cells.Fence2, CellX2+CellW/2, CellY2+CellH/2);
-  Sprite(RES.Cells.Nest, CellX3+CellW/2, CellY3+CellH/2);
-  Sprite(RES.Cells.Cell, CellX4+CellW/2, CellY4+CellH/2);
+  for cell in ALL_CELLS do
+    cell.Draw;
 end;
 
 procedure DrawFood;

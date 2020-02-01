@@ -4,7 +4,7 @@ interface
 {$J-}
 type
 TRawResource = (TRawResource_NOT_USED);
-TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2, res_Printer, res_Rotate);
+TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Tukan_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2, res_Printer, res_Rotate);
 TSound = (NO_MUSIC = -1, TSound_NOT_USED);
 TButton = (res_Go, res_Settings, res_Stop, res_World, res_Bar, res_Color, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
 TTileMap = (TTileMap_NOT_USED);
@@ -23,6 +23,10 @@ TCells = record
   Fence: TSprite;
   Fence2: TSprite;
   Nest: TSprite;
+end;
+
+TChildren = record
+  Tukan_small: TSprite;
 end;
 
 TFood = record
@@ -57,6 +61,7 @@ end;
 TRES = record
   Animals: TAnimals;
   Cells: TCells;
+  Children: TChildren;
   Food: TFood;
   Hud: THud;
   Paint: TPaint;
@@ -80,6 +85,9 @@ const RES: TRES = (
     Fence: res_Fence;
     Fence2: res_Fence2;
     Nest: res_Nest;
+  );
+  Children: (
+    Tukan_small: res_Tukan_small;
   );
   Food: (
     Aid: res_Aid;
