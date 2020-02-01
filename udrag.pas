@@ -10,6 +10,7 @@ uses
 type
   TDragMode = (NoDrag, DragChild, DragFood);
 
+
 var
   DragMode: TDragMode;
   DragItem: integer;
@@ -81,8 +82,8 @@ begin
   end;
   //check child
   if Assigned(AppCurChild) and (Scene = Application) and
-    InRange(X, ChildX - CellW / 2, ChildX + CellW / 2) and
-    InRange(Y, ChildY - CellH / 2, ChildY + CellH / 2) and (AppCurChild <> AppAnimal) then
+    InRange(X, ChildX - CellW * ChildCaptureX, ChildX + CellW * ChildCaptureX) and
+    InRange(Y, ChildY - CellH * ChildCaptureY, ChildY + CellH * ChildCaptureY) and (AppCurChild <> AppAnimal) then
   begin
     DragMode := DragChild;
     DragItem := -1;

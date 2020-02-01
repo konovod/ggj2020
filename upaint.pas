@@ -48,6 +48,9 @@ const
   AppBaseX = 832;
   AppBaseY = 542;
 
+  ChildCaptureX = 0.33;
+  ChildCaptureY = 0.5;
+
 
 var
   Scene: TScene;
@@ -104,8 +107,8 @@ end;
 procedure GoPaint;
 begin
   Scene := Paint;
-  PaintColor := $000000FF;
-  PaintR := 10;
+  PaintColor := AppAnimal^.Palette[Random(AppAnimal^.PaletteSize)+1];
+  PaintR := 7+random(5);
   SomeAction := -1;
 end;
 
@@ -435,14 +438,16 @@ var
   crindex, index, lay, i, j: integer;
   found: boolean;
   c: TColor;
-label
-  palette_full;
+  bestcount, besti: integer;
+  colors: array of TColor;
+  colorscount: array of TColor;
 begin
   for crindex := 1 to NCREATURES do
   begin
     cr := @ALL_CREATURES[crindex];
-    cr^.PaletteSize := 1;
-    cr^.Palette[1] := $000000FF;
+
+    SetLength(colors, 0);
+    SetLength(colorscount, 0);
     for lay := 0 to NPARTS do
       for i := 0 to PaintW - 1 do
         for j := 0 to PaintH - 1 do
@@ -451,21 +456,42 @@ begin
           if c and 255 < 250 then
             continue;
           found := False;
-          for index := 1 to cr^.PaletteSize do
-            if ColorDelta(cr^.Palette[index], c) < 100 then
+          for index := 0 to Length(colors)-1 do
+            if ColorDelta(colors[index], c) < 75 then
             begin
               found := True;
+              inc(colorscount[index]);
               break;
             end;
           if not found then
           begin
-            Inc(cr^.PaletteSize);
-            cr^.Palette[cr^.PaletteSize] := (c and (not 255)) or 255;
-            if cr^.PaletteSize >= MAXPALETTE then
-              goto palette_full;
+            SetLength(colors, Length(colors)+1);
+            SetLength(colorscount, Length(colorscount)+1);
+            colors[Length(colors)-1] := (c and (not 255)) or 255;
+            colorscount[Length(colors)-1] := 1;
           end;
         end;
-    palette_full: ;
+    cr^.PaletteSize := 0;
+    //omg selection sort
+    for i := 1 to MAXPALETTE do
+    begin
+      bestcount := 1;
+      besti := -1;
+      for j := 0 to Length(colorscount)-1 do
+        if colorscount[j] > bestcount then
+        begin
+          besti := j;
+          bestcount := colorscount[j];
+        end;
+      if besti > 0 then
+      begin
+        inc(cr^.PaletteSize);
+        cr^.Palette[cr^.PaletteSize] := colors[besti];
+        if cr^.PaletteSize >= MAXPALETTE then break;;
+        colorscount[besti] := 0;
+      end;
+    end;
+
   end;
 end;
 
