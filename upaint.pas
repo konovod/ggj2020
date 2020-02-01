@@ -5,31 +5,42 @@ unit uPaint;
 interface
 
 uses
-  Classes, SysUtils, uengine, Resources, math;
+  Classes, SysUtils, uengine, Resources, math, uCreature;
 
 type
-  TScene = (Paint, Application);
+  TScene = (Flight, Paint, Application);
 
 const
-  PaintX = 500;
-  PaintY = 300;
-  PaintW = 300;
-  PaintH = 300;
+  PaintX = 656+300;
+  PaintY = 93+300;
+  PaintW = 600;
+  PaintH = 600;
+
+  MsgX = 656;
+  MsgY = 150;
 
 var
   Scene: TScene;
   AppX, AppY, AppAngle: TCoord;
+  AppAnimal: TCreature;
+  AppMissing: Integer;
+
+
   PaintColor: TColor;
   PaintR: Integer;
   prevx, prevy: TCoord;
 
+procedure DrawScene;
 
 
 procedure GoPaint;
 procedure GoApplication;
+procedure GoFlight;
 procedure DrawPaint;
 procedure DrawApplication;
-procedure DrawScene;
+procedure DrawFlight;
+
+procedure UpdateImage;
 
 
 implementation
@@ -39,17 +50,13 @@ begin
   case Scene of
     Paint: DrawPaint;
     Application: DrawApplication;
+    Flight: DrawFlight;
   end;
 end;
 
 
 procedure GoPaint;
-var
-  i, j: Integer;
 begin
-  for i := 0 to PaintW-1 do
-    for j := 0 to PaintH-1 do
-      SetPixel(RES.Empty, i, j, 0);
   Scene := Paint;
   PaintColor:=$000000FF;
   PaintR:=3;
@@ -75,6 +82,13 @@ begin
         if hypot(ax-Trunc(cx), ay-Trunc(cy)) > PaintR then continue;
         SetPixel(RES.Empty, ax, ay, PaintColor);
       end;
+end;
+
+procedure GoFlight;
+begin
+  Scene := Flight;
+  AppAnimal := ALL_CREATURES[Random(NCREATURES)];
+  AppMissing := Random(NPARTS)+1;
 end;
 
 procedure DrawPaint;
@@ -118,7 +132,6 @@ begin
       end
       else
         prevx := -1;
-
     end;
 
   if MouseGet(ScrollPos) <> 0 then
@@ -134,9 +147,13 @@ begin
 end;
 
 procedure DrawApplication;
+var
+  i: integer;
 begin
   Background(RES.Back);
-  Sprite(RES.Elephant2, PaintX, PaintY);
+  for i := 0 to NPARTS do
+    if i <> AppMissing then
+      Sprite(AppAnimal.Layers[I], PaintX, PaintY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
 
   if MouseState(LeftButton) = mbsDown then
@@ -160,7 +177,32 @@ begin
     AppAngle := AppAngle + MouseGet(ScrollPos);
 
   if KeyState(KeyReturn) = ksPressed then
+  begin
+    UpdateImage;
+    GoFlight;
+  end;
+end;
+
+procedure DrawFlight;
+begin
+  Background(RES.Back);
+  FontConfig(RES.Vera, 48, BLACK);
+  DrawText(RES.Vera, PChar(AppAnimal.Name+' ждет новый '+AppAnimal.LayerNames[AppMissing]), MsgX, MsgY);
+
+  if KeyState(KeyReturn) = ksPressed then
     GoPaint;
+end;
+
+procedure UpdateImage;
+var
+  i, j: integer;
+  nx, ny: TCoord;
+begin
+  DrawRotatedCrunch(RES.Empty, AppAnimal.Layers[AppMissing], AppX - PaintX, AppY - PaintY, AppAngle );
+  DrawRotatedCrunch(RES.Empty2, Res.Empty, 0,0,0 );
+  //for i := 0 to PaintW-1 do
+  //  for j := 0 to PaintH-1 do
+  //    SetPixel(RES.Empty, i, j, 0);
 end;
 
 end.

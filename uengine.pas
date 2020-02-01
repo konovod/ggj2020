@@ -223,6 +223,9 @@ function BodyCollided(MyMaterial: TMaterial; MyID: pointer; WithMaterial: TMater
 procedure SetCurrentCollision(React: Boolean); cdecl; external nonoengine;
 procedure ShapeApplyForce(Material: TMaterial; id: pointer; fx, fy, dx, dy, moment: TCoord); cdecl; external nonoengine;
 
+
+procedure DrawRotatedCrunch(afrom, ato: TSprite; x, y, angle: TCoord);cdecl;external nonoengine;
+
 implementation
 
 uses SysUtils;

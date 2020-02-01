@@ -3,15 +3,17 @@ program demo;
 uses
   SysUtils,
   uEngine,
-  Resources, uPaint;
+  Resources, uPaint, uCreature;
 
 begin
   //EngineSet(Antialias, 4);
   EngineSet(VSync, 1);
-  EngineSet(Width, 1000);
-  EngineSet(Height, 667);
+  EngineSet(Fullscreen, 0);
+  EngineSet(Autoscale, 1);
+  EngineSet(Width, 1920);
+  EngineSet(Height, 1080);
   EngineInit('./resources');
-  GoPaint;
+  GoFlight;
   repeat
     DrawScene;
     EngineProcess;
