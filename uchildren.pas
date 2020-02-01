@@ -133,15 +133,21 @@ begin
 end;
 
 procedure TCell.Draw;
+var
+  scale: TCoord;
 begin
   Sprite(Img, X+W/2, Y+H/2);
   if Filled and ((DragMode <> DragChild)or(DragItem <> Index) )then
   begin
     Sprite(Parent^.Small, X+W/2, Y+H/2);
-    if (SmileTimer > 0) and (SmileTimer < GetTickCount64) then
-      Sprite(RES.Happy, X+W/4, Y+H/4)
+    if GetTickCount64 mod 1000 > 450 then
+      scale := 1.1
+    else
+      scale := 0.95;
+    if (SmileTimer > GetTickCount64) then
+      Sprite(RES.Happy, X+W/4, Y+H/4, scale, scale)
     else if (FoodTimer > 0) and (FoodTimer < GetTickCount64) then
-      Sprite(RES.Cry, X+W/4, Y+H/4)
+      Sprite(RES.Cry, X+W/4, Y+H/4, scale, scale)
   end;
 end;
 
