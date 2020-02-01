@@ -110,19 +110,46 @@ begin
 end;
 
 procedure GoApplication;
+var
+  ChildOK: Boolean;
+  cell: TCell;
 begin
   AppX := AppBaseX;
   AppY := AppBaseY;
   AppAngle := 0;
   Scene := Application;
   SomeAction := -1;
-  AppCurChild := @ALL_CREATURES[Random(NCREATURES)+1];
+  ChildOK :=False;
+  repeat
+    AppCurChild := @ALL_CREATURES[Random(NCREATURES)+1];
+    if random < 0.01 then break;
+    //should be not same
+    if AppCurChild = AppAnimal then continue;
+    //should not be already
+    ChildOK := True;
+    for cell in ALL_CELLS do
+      if cell.Filled and (cell.Parent = AppCurChild) then
+      begin
+        ChildOK := False;
+        break;
+      end;
+    if not ChildOK then continue;
+    //should be a room
+    ChildOK := False;
+    for cell in ALL_CELLS do
+      if (not cell.Filled) and (cell.Child = AppCurChild^.Child) then
+      begin
+        ChildOK := True;
+        break;
+      end;
+  until ChildOK;
+  if not ChildOK then AppCurChild := nil;
 end;
 
 procedure DrawCircle(cx, cy: TCoord);
 begin
   DrawRotatedCrunch(ActiveShape, Res.Empty, cx-ShapeW/4, cy-ShapeH/4, PaintR / ShapeW, PaintR / ShapeH, 1, PaintColor, False);
-  if SomeAction < 0 then SomeAction := GetTickCount64+10000;
+  if SomeAction < 0 then SomeAction := GetTickCount64+5000;
 end;
 
 procedure GoFlight;
@@ -332,8 +359,8 @@ begin
       Sprite(AppAnimal^.Layers[I], AppBaseX, AppBaseY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
 
-  if AppCurChild <> nil then
-    Sprite(AppAnimal^.Small, ChildX, ChildY);
+  if (AppCurChild <> nil) and ((DragMode <> DragChild)or(DragItem <> -1) ) then
+    Sprite(AppCurChild^.Small, ChildX, ChildY);
 
   if not ProcessDrag then
   if MouseState(LeftButton) = mbsDown then

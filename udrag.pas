@@ -5,7 +5,7 @@ unit uDrag;
 interface
 
 uses
-  Classes, SysUtils, uEngine, Resources, uCreature, uChildren, Math;
+  Classes, SysUtils, uEngine, Resources, uCreature,  Math;
 
 type
   TDragMode = (NoDrag, DragChild, DragFood);
@@ -22,7 +22,7 @@ procedure DrawDrag;
 
 implementation
 
-uses uPaint;
+uses uChildren,uPaint;
 
 function ProcessDrag: Boolean;
 begin
@@ -79,7 +79,7 @@ begin
     exit;
   end;
   //check child
-  if Assigned(AppCurChild) and InRange(X, ChildX-CellW, ChildX+CellW) and InRange(Y, ChildY-CellH, ChildY+CellH) then
+  if Assigned(AppCurChild)and (Scene = Application) and  InRange(X, ChildX-CellW, ChildX+CellW) and InRange(Y, ChildY-CellH, ChildY+CellH) then
     begin
       DragMode := DragChild;
       DragItem := -1;

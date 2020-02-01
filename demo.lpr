@@ -7,6 +7,7 @@ uses
 
 begin
   //EngineSet(Antialias, 4);
+  Randomize;
   EngineSet(VSync, 1);
   EngineSet(Fullscreen, 1);
   EngineSet(Autoscale, 1);

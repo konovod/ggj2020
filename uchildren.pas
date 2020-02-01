@@ -5,7 +5,7 @@ unit uChildren;
 interface
 
 uses
-  Classes, SysUtils, uEngine, Resources, uCreature;
+  Classes, SysUtils, uEngine, Resources, uCreature, uDrag;
 
 type
 
@@ -130,7 +130,7 @@ end;
 procedure TCell.Draw;
 begin
   Sprite(Img, X+W/2, Y+H/2);
-  if Filled then
+  if Filled and ((DragMode <> DragChild)or(DragItem <> Index) )then
     Sprite(Parent^.Small, X+W/2, Y+H/2);
 end;
 

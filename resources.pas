@@ -4,7 +4,7 @@ interface
 {$J-}
 type
 TRawResource = (TRawResource_NOT_USED);
-TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Tukan_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2, res_Printer, res_Rotate);
+TSprite = (THE_SCREEN = -1, res_Elephant_1, res_Elephant_2, res_Elephant_3, res_Elephant_body, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Elephant_small, res_Tukan_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2, res_Printer, res_Rotate, res_Star);
 TSound = (NO_MUSIC = -1, TSound_NOT_USED);
 TButton = (res_Go, res_Settings, res_Stop, res_World, res_Bar, res_Color, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
 TTileMap = (TTileMap_NOT_USED);
@@ -12,6 +12,10 @@ TFont = (res_Vera);
 
 
 TAnimals = record
+  Elephant_1: TSprite;
+  Elephant_2: TSprite;
+  Elephant_3: TSprite;
+  Elephant_body: TSprite;
   Tukan_1: TSprite;
   Tukan_2: TSprite;
   Tukan_3: TSprite;
@@ -26,6 +30,7 @@ TCells = record
 end;
 
 TChildren = record
+  Elephant_small: TSprite;
   Tukan_small: TSprite;
 end;
 
@@ -70,11 +75,16 @@ TRES = record
   Empty2: TSprite;
   Printer: TSprite;
   Rotate: TSprite;
+  Star: TSprite;
   Vera: TFont;
 end;
 
 const RES: TRES = (
   Animals: (
+    Elephant_1: res_Elephant_1;
+    Elephant_2: res_Elephant_2;
+    Elephant_3: res_Elephant_3;
+    Elephant_body: res_Elephant_body;
     Tukan_1: res_Tukan_1;
     Tukan_2: res_Tukan_2;
     Tukan_3: res_Tukan_3;
@@ -87,6 +97,7 @@ const RES: TRES = (
     Nest: res_Nest;
   );
   Children: (
+    Elephant_small: res_Elephant_small;
     Tukan_small: res_Tukan_small;
   );
   Food: (
@@ -120,6 +131,7 @@ const RES: TRES = (
   Empty2: res_Empty2;
   Printer: res_Printer;
   Rotate: res_Rotate;
+  Star: res_Star;
   Vera: res_Vera;
 );
 

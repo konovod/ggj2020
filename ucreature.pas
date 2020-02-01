@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, uEngine, Resources;
 
 const
-    NCREATURES = 1;
+    NCREATURES = 2;
     NPARTS = 3;
     MAXPALETTE = 7;
 
@@ -37,7 +37,14 @@ const
         LayerNames: ('нужна замена клюва', 'нужен новый хвост', 'требуется замена глаза');
         Child: Bird;
         Small: res_Tukan_small
-        )
+        ),
+        (Name: 'Слона';
+          Layers: (res_Elephant_body, res_Elephant_1, res_Elephant_2, res_Elephant_3);
+          LayerNames: ('нужен искусственный хобот', 'нужен новый хвост', 'требуется протез ноги');
+          Child: Herbivore;
+          Small: res_Elephant_small
+          )
+
     );
 
 
