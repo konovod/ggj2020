@@ -12,12 +12,14 @@ type
   { TCell }
 
   TCell = class
+    Index: Integer;
     X,Y,W,H: TCoord;
     Child: TChild;
 
     Filled: Boolean;
     Parent: PCreature;
-    FoodTimer: Integer;
+    FoodTimer: Int64;
+    NeedFood: TFood;
     Img: TSprite;
 
     constructor Create;
@@ -72,6 +74,7 @@ begin
   ALL_CELLS[0] := TCell.Create;
   with ALL_CELLS[0] do
   begin
+    Index := 0;
     X := CellX1;
     Y := CellY1;
     W := CellW;
@@ -83,6 +86,7 @@ begin
   ALL_CELLS[1] := TCell.Create;
   with ALL_CELLS[1] do
   begin
+    Index := 1;
     X := CellX2;
     Y := CellY2;
     W := CellW;
@@ -94,6 +98,7 @@ begin
   ALL_CELLS[2] := TCell.Create;
   with ALL_CELLS[2] do
   begin
+    Index := 2;
     X := CellX3;
     Y := CellY3;
     W := CellW;
@@ -105,6 +110,7 @@ begin
   ALL_CELLS[3] := TCell.Create;
   with ALL_CELLS[3] do
   begin
+    Index := 3;
     X := CellX4;
     Y := CellY4;
     W := CellW;
