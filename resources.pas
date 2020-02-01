@@ -6,7 +6,7 @@ type
 TRawResource = (TRawResource_NOT_USED);
 TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2);
 TSound = (NO_MUSIC = -1, TSound_NOT_USED);
-TButton = (res_Bar, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
+TButton = (res_Bar, res_Color, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
 TTileMap = (TTileMap_NOT_USED);
 TFont = (res_Vera);
 
@@ -24,6 +24,7 @@ TPaint = record
   Ashape3: TSprite;
   Ashape4: TSprite;
   Bar: TButton;
+  Color: TButton;
   Shape1: TButton;
   Shape2: TButton;
   Shape3: TButton;
@@ -52,6 +53,7 @@ const RES: TRES = (
     Ashape3: res_Ashape3;
     Ashape4: res_Ashape4;
     Bar: res_Bar;
+    Color: res_Color;
     Shape1: res_Shape1;
     Shape2: res_Shape2;
     Shape3: res_Shape3;

@@ -13,6 +13,7 @@ begin
   EngineSet(Width, 1920);
   EngineSet(Height, 1080);
   EngineInit('./resources');
+  BuildPalettes;
   GoFlight;
   repeat
     DrawScene;

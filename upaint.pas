@@ -32,6 +32,12 @@ const
   ShapeW = 55;
   ShapeH = 55;
 
+  ColorX1 = 1350;
+  ColorY1 = 468;
+  ColorDX = 110;
+  ColorDY = 75;
+
+
 var
   Scene: TScene;
   AppX, AppY, AppAngle: TCoord;
@@ -64,6 +70,8 @@ procedure DrawFlight;
 
 procedure UpdateImage;
 
+procedure BuildPalettes;
+
 
 implementation
 
@@ -94,28 +102,14 @@ begin
 end;
 
 procedure DrawCircle(cx, cy: TCoord);
-var
-  ax, ay: integer;
 begin
-  //if PaintColor = 0 then
-  //begin
-  //  for ax := Trunc(cx) - PaintR to Trunc(cx) + PaintR do
-  //    for ay := Trunc(cy) - PaintR to Trunc(cy) + PaintR do
-  //      begin
-  //        if not (InRange(ax, 0, PaintW-1) and InRange(ay, 0, PaintH-1)) then
-  //          continue;
-  //        if hypot(ax-Trunc(cx), ay-Trunc(cy)) > PaintR then continue;
-  //        SetPixel(RES.Empty, ax, ay, PaintColor);
-  //      end;
-  //end
-  //else
   DrawRotatedCrunch(ActiveShape, Res.Empty, cx-ShapeW/4, cy-ShapeH/4, PaintR / ShapeW, PaintR / ShapeH, 1, PaintColor, False);
 end;
 
 procedure GoFlight;
 begin
   Scene := Flight;
-  AppAnimal := ALL_CREATURES[Random(NCREATURES)];
+  AppAnimal := ALL_CREATURES[Random(NCREATURES)+1];
   AppMissing := Random(NPARTS)+1;
 end;
 
@@ -159,6 +153,36 @@ begin
   SetLayer(1);
 end;
 
+procedure OneColor(Index: Integer; x,y: TCoord);
+var
+  toshow: TColor;
+begin
+  if Button(Res.Paint.Color, 0, x, y, ShapeW, ShapeH) = bsPressed then
+  begin
+    if Index = 0 then
+      PaintColor := 0
+    else
+      PaintColor := AppAnimal.Palette[Index];
+  end;
+
+  if index = 0 then
+    toshow := $FFFFFFFF
+  else
+    toshow := AppAnimal.Palette[Index];
+
+  SetLayer(101);
+  Ellipse(x+ShapeW/2, y+ShapeH/2, ShapeW/2 - 5, ShapeH/2 - 5,true,toshow);
+  SetLayer(1);
+end;
+
+procedure DrawPalette;
+var
+  i: Integer;
+begin
+  for i := 0 to AppAnimal.PaletteSize do
+    OneColor(i, ColorX1 + (i mod 2) * ColorDX, ColorY1 + (i div 2) * ColorDY);
+end;
+
 procedure DrawBasic;
 begin
   Background(RES.Back);
@@ -168,6 +192,8 @@ begin
   OneShape(2, RES.Paint.Shape2, RES.Paint.Ashape2, ShapeX1+ShapeDX, ShapeY1);
   OneShape(3, RES.Paint.Shape3, RES.Paint.Ashape3, ShapeX1, ShapeY1+ShapeDY);
   OneShape(4, RES.Paint.Shape4, RES.Paint.Ashape4, ShapeX1+ShapeDX, ShapeY1+ShapeDY);
+
+  DrawPalette;
 
 end;
 
@@ -272,15 +298,55 @@ begin
 end;
 
 procedure UpdateImage;
-var
-  i, j: integer;
-  nx, ny: TCoord;
 begin
   DrawRotatedCrunch(RES.Empty, AppAnimal.Layers[AppMissing], AppX - PaintX, AppY - PaintY, 1, 1, AppAngle);
   DrawRotatedCrunch(RES.Empty2, Res.Empty, 0,0);
-  //for i := 0 to PaintW-1 do
-  //  for j := 0 to PaintH-1 do
-  //    SetPixel(RES.Empty, i, j, 0);
+end;
+
+function ColorDelta(c1, c2: TColor): Integer;
+var
+  red, blue, green: Integer;
+begin
+  red := abs((c1 shr 24) - (c2 shr 24));
+  green := abs(((c1 shr 16) and 255) - ((c2 shr 16) and 255));
+  blue := abs(((c1 shr 8) and 255) - ((c2 shr 8) and 255));
+  Result := red+green+blue;
+end;
+
+procedure BuildPalettes;
+var
+  cr: PCreature;
+  crindex, index, lay, i, j: Integer;
+  found: boolean;
+  c: TColor;
+  label palette_full;
+begin
+  for crindex := 1 to NCREATURES do
+  begin
+    cr := @ALL_CREATURES[crindex];
+    cr^.PaletteSize := 0;
+    for lay := 0 to NPARTS do
+      for i := 0 to PaintW-1 do
+        for j := 0 to PaintH-1 do
+        begin
+          c := GetPixel(i,j,cr^.Layers[lay]);
+          if c and 255 < 250 then continue;
+          found := false;
+          for index := 1 to cr^.PaletteSize do
+            if ColorDelta(cr^.Palette[index], c) < 100 then
+            begin
+              found := True;
+              break;
+            end;
+          if not found then
+          begin
+            Inc(cr^.PaletteSize);
+            cr^.Palette[cr^.PaletteSize] := (c and (not 255)) or 255;
+            if cr^.PaletteSize >= MAXPALETTE then goto palette_full;
+          end;
+        end;
+    palette_full:;
+  end;
 end;
 
 end.
