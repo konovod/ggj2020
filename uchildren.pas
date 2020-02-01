@@ -24,6 +24,11 @@ type
     procedure Draw;
   end;
 
+  TFood = (Fish, Meat, Grass, Game, Wash, Aid);
+  TFoodData = record
+    X,Y: TCoord;
+    Img: TSprite;
+  end;
 
 const
   CellW = 320;
@@ -44,18 +49,14 @@ const
   FoodW = 164;
   FoodH = 164;
 
-  FoodX1 = 347;
-  FoodY1 = 835;
-  FoodX2 = 562;
-  FoodY2 = 835;
-  FoodX3 = 776;
-  FoodY3 = 835;
-  FoodX4 = 990;
-  FoodY4 = 835;
-  FoodX5 = 1205;
-  FoodY5 = 835;
-  FoodX6 = 1419;
-  FoodY6 = 835;
+  FOOD_POS: array[TFood] of TFoodData = (
+    (X: 347; Y: 835; Img: res_Fish),
+    (X: 562; Y: 835; Img: res_Meat),
+    (X: 776; Y: 835; Img: res_Grass),
+    (X: 990; Y: 835; Img: res_Maracas),
+    (X: 1205; Y: 835; Img: res_Wash),
+    (X: 1419; Y: 835; Img: res_Aid)
+  );
 
 var
   ALL_CELLS: array of TCell;

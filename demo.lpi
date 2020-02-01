@@ -88,7 +88,7 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="demo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -118,6 +118,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uChildren"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="udrag.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uDrag"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

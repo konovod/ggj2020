@@ -67,7 +67,6 @@ var
   SomeAction: Int64;
 
 
-
 procedure DrawScene;
 
 
@@ -89,7 +88,7 @@ procedure BuildPalettes;
 
 implementation
 
-uses uChildren;
+uses uChildren, uDrag;
 
 procedure DrawScene;
 begin
@@ -220,13 +219,11 @@ begin
 end;
 
 procedure DrawFood;
+var
+  fd: TFood;
 begin
-  Sprite(RES.Food.Fish, FoodX1+FoodW/2, FoodY1+FoodH/2);
-  Sprite(RES.Food.Meat, FoodX2+FoodW/2, FoodY2+FoodH/2);
-  Sprite(RES.Food.Grass, FoodX3+FoodW/2, FoodY3+FoodH/2);
-  Sprite(RES.Food.Maracas, FoodX4+FoodW/2, FoodY4+FoodH/2);
-  Sprite(RES.Food.Wash, FoodX5+FoodW/2, FoodY5+FoodH/2);
-  Sprite(RES.Food.Aid, FoodX6+FoodW/2, FoodY6+FoodH/2);
+  for fd in TFood do
+    Sprite(FOOD_POS[fd].Img, FOOD_POS[fd].X+FoodW/2, FOOD_POS[fd].Y+FoodH/2);
 end;
 
 procedure DrawAddButtons;
@@ -281,6 +278,7 @@ begin
 
   cx := MouseGet(CursorX) - (PaintX-PaintW/2);
   cy := MouseGet(CursorY) - (PaintY-PaintH/2);
+  if not ProcessDrag then
   if InRange(cx, 0, PaintW-1) and InRange(cy, 0, PaintH-1)then
   begin
     if MouseState(LeftButton) = mbsDown then
@@ -328,6 +326,7 @@ begin
   if AppCurChild <> nil then
     Sprite(AppAnimal^.Small, ChildX, ChildY);
 
+  if not ProcessDrag then
   if MouseState(LeftButton) = mbsDown then
   begin
     if prevx < 0 then

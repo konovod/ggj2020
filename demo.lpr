@@ -3,7 +3,7 @@ program demo;
 uses
   SysUtils,
   uEngine,
-  Resources, uPaint, uCreature, uChildren;
+  Resources, uPaint, uCreature, uChildren, uDrag;
 
 begin
   //EngineSet(Antialias, 4);
