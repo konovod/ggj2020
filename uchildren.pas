@@ -20,11 +20,14 @@ type
     Filled: Boolean;
     Parent: PCreature;
     FoodTimer: Int64;
+    SmileTimer: Int64;
     NeedFood: TFood;
     Img: TSprite;
 
     constructor Create;
     procedure Draw;
+    procedure StartTimer;
+    procedure StopTimer;
   end;
 
   TFoodData = record
@@ -59,6 +62,8 @@ const
     (X: 1205; Y: 835; Img: res_Wash),
     (X: 1419; Y: 835; Img: res_Aid)
   );
+
+  Eats: array[TChild] of TFood = (Grass,Fish,Meat);
 
 var
   ALL_CELLS: array of TCell;
@@ -131,7 +136,30 @@ procedure TCell.Draw;
 begin
   Sprite(Img, X+W/2, Y+H/2);
   if Filled and ((DragMode <> DragChild)or(DragItem <> Index) )then
+  begin
     Sprite(Parent^.Small, X+W/2, Y+H/2);
+    if (SmileTimer > 0) and (SmileTimer < GetTickCount64) then
+      Sprite(RES.Happy, X+W/4, Y+H/4)
+    else if (FoodTimer > 0) and (FoodTimer < GetTickCount64) then
+      Sprite(RES.Cry, X+W/4, Y+H/4)
+  end;
+end;
+
+procedure TCell.StartTimer;
+begin
+  if not Filled then exit;
+  FoodTimer := GetTickCount64 + (10+Random(10))*(1000+random(100));
+  case random(4) of
+    0: NeedFood := Eats[Child];
+    1: NeedFood := Wash;
+    else NeedFood := Game;
+  end;
+end;
+
+procedure TCell.StopTimer;
+begin
+  FoodTimer := -1;
+  SmileTimer := -1;
 end;
 
 end.

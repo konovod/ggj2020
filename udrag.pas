@@ -104,7 +104,8 @@ begin
         if (cell.FoodTimer <= 0) or (cell.FoodTimer > GetTickCount64) then exit;
         if cell.NeedFood <> uChildren.TFood(DragItem) then exit;
         Result := True;
-        //TODO Food aten, now create next food
+        cell.StartTimer;
+        cell.SmileTimer := GetTickCount64+2000;
       end;
     DragChild:
       begin
@@ -122,6 +123,7 @@ begin
             //drop old item
             if DragItem < 0 then exit;
             ALL_CELLS[DragItem].Filled := False;
+            ALL_CELLS[DragItem].StopTimer;
             AppCurChild := animal;
             //TODO well, child found
           end;
@@ -134,11 +136,14 @@ begin
           if DragItem < 0 then
             AppCurChild := nil
           else
+          begin
+            ALL_CELLS[DragItem].StopTimer;
             ALL_CELLS[DragItem].Filled := False;
+          end;
 
           cell.Filled := True;
           cell.Parent := animal;
-          //TODO child placed, start food timer
+          cell.StartTimer;
         end;
       end;
   end;

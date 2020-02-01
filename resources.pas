@@ -4,7 +4,7 @@ interface
 {$J-}
 type
 TRawResource = (TRawResource_NOT_USED);
-TSprite = (THE_SCREEN = -1, res_Elephant_1, res_Elephant_2, res_Elephant_3, res_Elephant_body, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Elephant_small, res_Tukan_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2, res_Printer, res_Rotate, res_Star);
+TSprite = (THE_SCREEN = -1, res_Elephant_1, res_Elephant_2, res_Elephant_3, res_Elephant_body, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Elephant_small, res_Tukan_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Cry, res_Empty, res_Empty2, res_Happy, res_Printer, res_Rotate, res_Star);
 TSound = (NO_MUSIC = -1, TSound_NOT_USED);
 TButton = (res_Go, res_Settings, res_Stop, res_World, res_Bar, res_Color, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
 TTileMap = (TTileMap_NOT_USED);
@@ -71,8 +71,10 @@ TRES = record
   Hud: THud;
   Paint: TPaint;
   Back: TSprite;
+  Cry: TSprite;
   Empty: TSprite;
   Empty2: TSprite;
+  Happy: TSprite;
   Printer: TSprite;
   Rotate: TSprite;
   Star: TSprite;
@@ -127,8 +129,10 @@ const RES: TRES = (
     Shape4: res_Shape4;
   );
   Back: res_Back;
+  Cry: res_Cry;
   Empty: res_Empty;
   Empty2: res_Empty2;
+  Happy: res_Happy;
   Printer: res_Printer;
   Rotate: res_Rotate;
   Star: res_Star;
