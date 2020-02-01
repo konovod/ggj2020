@@ -79,7 +79,7 @@ begin
     exit;
   end;
   //check child
-  if Assigned(AppCurChild)and (Scene = Application) and  InRange(X, ChildX-CellW, ChildX+CellW) and InRange(Y, ChildY-CellH, ChildY+CellH) then
+  if Assigned(AppCurChild)and (Scene = Application) and InRange(X, ChildX-CellW/2, ChildX+CellW/2) and InRange(Y, ChildY-CellH/2, ChildY+CellH/2) and (AppCurChild <> AppAnimal) then
     begin
       DragMode := DragChild;
       DragItem := -1;
