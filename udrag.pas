@@ -96,7 +96,7 @@ end;
 function CheckDragDrop(X, Y: TCoord): boolean;
 var
   cell: TCell;
-  animal: PCreature;
+  animal: TCreature;
 begin
   Result := False;
   case DragMode of
@@ -142,7 +142,7 @@ begin
       begin
         if cell.Filled then
           exit;
-        if cell.Child <> animal^.Child then
+        if cell.Child <> animal.Child then
           exit;
         //drop old item
         if DragItem < 0 then
@@ -169,7 +169,7 @@ end;
 
 procedure DrawDrag;
 var
-  animal: PCreature;
+  animal: TCreature;
 begin
   SetLayer(102);
   case DragMode of
@@ -183,7 +183,7 @@ begin
         animal := AppCurChild
       else
         animal := ALL_CELLS[DragItem].Parent;
-      Sprite(animal^.Small, MouseGet(CursorX), MouseGet(CursorY));
+      Sprite(animal.Small, MouseGet(CursorX), MouseGet(CursorY));
     end;
   end;
   SetLayer(1);

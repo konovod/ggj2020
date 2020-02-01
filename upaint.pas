@@ -55,9 +55,9 @@ const
 var
   Scene: TScene;
   AppX, AppY, AppAngle: TCoord;
-  AppAnimal: PCreature;
+  AppAnimal: TCreature;
   AppMissing: integer;
-  AppCurChild: PCreature;
+  AppCurChild: TCreature;
 
 
 
@@ -107,7 +107,7 @@ end;
 procedure GoPaint;
 begin
   Scene := Paint;
-  PaintColor := AppAnimal^.Palette[Random(AppAnimal^.PaletteSize)+1];
+  PaintColor := AppAnimal.Palette[Random(AppAnimal.PaletteSize)+1];
   PaintR := 7+random(5);
   SomeAction := -1;
 end;
@@ -124,7 +124,7 @@ begin
   SomeAction := -1;
   ChildOK := False;
   repeat
-    AppCurChild := @ALL_CREATURES[Random(NCREATURES) + 1];
+    AppCurChild := ALL_CREATURES[Random(NCREATURES) + 1];
     if random < 0.01 then
       break;
     //should be not same
@@ -143,7 +143,7 @@ begin
     //should be a room
     ChildOK := False;
     for cell in ALL_CELLS do
-      if (not cell.Filled) and (cell.Child = AppCurChild^.Child) then
+      if (not cell.Filled) and (cell.Child = AppCurChild.Child) then
       begin
         ChildOK := True;
         break;
@@ -164,10 +164,10 @@ end;
 procedure GoFlight;
 begin
   Scene := Flight;
-  AppAnimal := @ALL_CREATURES[Random(NCREATURES) + 1];
+  AppAnimal := ALL_CREATURES[Random(NCREATURES) + 1];
   repeat
     AppMissing := Random(NPARTS) + 1;
-  until (not AppAnimal^.WasFixed[AppMissing]) or (random < 0.1);
+  until (not AppAnimal.WasFixed[AppMissing]) or (random < 0.1);
   SomeAction := GetTickCount64;
 end;
 
@@ -233,14 +233,14 @@ begin
       if Index = 0 then
         PaintColor := 0
       else
-        PaintColor := AppAnimal^.Palette[Index];
+        PaintColor := AppAnimal.Palette[Index];
     end;
   end;
 
   if index = 0 then
     toshow := $FFFFFFFF
   else
-    toshow := AppAnimal^.Palette[Index];
+    toshow := AppAnimal.Palette[Index];
 
   SetLayer(101);
   Ellipse(x + ShapeW / 2, y + ShapeH / 2, ShapeW / 2 - 5, ShapeH / 2 - 5, True, toshow);
@@ -251,7 +251,7 @@ procedure DrawPalette;
 var
   i: integer;
 begin
-  for i := 0 to AppAnimal^.PaletteSize do
+  for i := 0 to AppAnimal.PaletteSize do
     OneColor(i, ColorX1 + (i mod 2) * ColorDX, ColorY1 + (i div 2) * ColorDY);
 end;
 
@@ -368,11 +368,11 @@ var
 begin
   for i := 0 to NPARTS do
     if i <> AppMissing then
-      Sprite(AppAnimal^.Layers[I], AppBaseX, AppBaseY);
+      Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
 
   if (AppCurChild <> nil) and ((DragMode <> DragChild) or (DragItem <> -1)) then
-    Sprite(AppCurChild^.Small, ChildX, ChildY);
+    Sprite(AppCurChild.Small, ChildX, ChildY);
 
   if not ProcessDrag then
     if MouseState(LeftButton) = mbsDown then
@@ -403,8 +403,8 @@ var
   i, j: integer;
 begin
   FontConfig(RES.Vera, 48, BLACK);
-  DrawText(RES.Vera, PChar('К вам везут ' + AppAnimal^.Name +
-    #13#10'Ему срочно ' + AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
+  DrawText(RES.Vera, PChar('К вам везут ' + AppAnimal.Name +
+    #13#10'Ему срочно ' + AppAnimal.LayerNames[AppMissing]), MsgX, MsgY);
   //  DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
   ProcessDrag;
 
@@ -416,8 +416,8 @@ end;
 
 procedure UpdateImage;
 begin
-  AppAnimal^.WasFixed[AppMissing] := True;
-  DrawRotatedCrunch(RES.Empty, AppAnimal^.Layers[AppMissing], AppX -
+  AppAnimal.WasFixed[AppMissing] := True;
+  DrawRotatedCrunch(RES.Empty, AppAnimal.Layers[AppMissing], AppX -
     AppBaseX - 10, AppY - AppBaseY - 10, 1, 1, AppAngle);
   DrawRotatedCrunch(RES.Empty2, Res.Empty, 0, 0);
 end;
@@ -434,7 +434,7 @@ end;
 
 procedure BuildPalettes;
 var
-  cr: PCreature;
+  cr: TCreature;
   crindex, index, lay, i, j: integer;
   found: boolean;
   c: TColor;
@@ -444,7 +444,7 @@ var
 begin
   for crindex := 1 to NCREATURES do
   begin
-    cr := @ALL_CREATURES[crindex];
+    cr := ALL_CREATURES[crindex];
 
     SetLength(colors, 0);
     SetLength(colorscount, 0);
@@ -452,7 +452,7 @@ begin
       for i := 0 to PaintW - 1 do
         for j := 0 to PaintH - 1 do
         begin
-          c := GetPixel(i, j, cr^.Layers[lay]);
+          c := GetPixel(i, j, cr.Layers[lay]);
           if c and 255 < 250 then
             continue;
           found := False;
@@ -471,7 +471,7 @@ begin
             colorscount[Length(colors)-1] := 1;
           end;
         end;
-    cr^.PaletteSize := 0;
+    cr.PaletteSize := 0;
     //omg selection sort
     for i := 1 to MAXPALETTE do
     begin
@@ -485,9 +485,9 @@ begin
         end;
       if besti > 0 then
       begin
-        inc(cr^.PaletteSize);
-        cr^.Palette[cr^.PaletteSize] := colors[besti];
-        if cr^.PaletteSize >= MAXPALETTE then break;;
+        inc(cr.PaletteSize);
+        cr.Palette[cr.PaletteSize] := colors[besti];
+        if cr.PaletteSize >= MAXPALETTE then break;;
         colorscount[besti] := 0;
       end;
     end;

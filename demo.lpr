@@ -18,6 +18,7 @@ begin
   EngineSet(Width, 1920);
   EngineSet(Height, 1080);
   EngineInit('./resources');
+  InitCreatures;
   BuildPalettes;
   InitCells;
   GoFlight;

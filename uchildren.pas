@@ -18,7 +18,7 @@ type
     Child: TChild;
 
     Filled: boolean;
-    Parent: PCreature;
+    Parent: TCreature;
     FoodTimer: int64;
     SmileTimer: int64;
     NeedFood: TFood;
@@ -140,7 +140,7 @@ begin
   if Child = Bird then Sprite(PreImg, X + W / 2, Y + H / 2);
   if Filled and ((DragMode <> DragChild) or (DragItem <> Index)) then
   begin
-    Sprite(Parent^.Small, X + W / 2, Y + H / 2);
+    Sprite(Parent.Small, X + W / 2, Y + H / 2);
     if GetTickCount64 mod 1000 > 450 then
       scale := 1.1
     else
