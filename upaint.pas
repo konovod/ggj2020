@@ -43,11 +43,18 @@ const
   ColorDX = 110;
   ColorDY = 75;
 
+  ChildX = 1213;
+  ChildY = 661;
+  AppBaseX = 832;
+  AppBaseY = 542;
+
+
 var
   Scene: TScene;
   AppX, AppY, AppAngle: TCoord;
-  AppAnimal: TCreature;
+  AppAnimal: PCreature;
   AppMissing: Integer;
+  AppCurChild: PCreature;
 
 
 
@@ -105,11 +112,12 @@ end;
 
 procedure GoApplication;
 begin
-  AppX := PaintX;
-  AppY := PaintY;
+  AppX := AppBaseX;
+  AppY := AppBaseY;
   AppAngle := 0;
   Scene := Application;
   SomeAction := False;
+  AppCurChild := @ALL_CREATURES[Random(NCREATURES)+1];
 end;
 
 procedure DrawCircle(cx, cy: TCoord);
@@ -121,7 +129,7 @@ end;
 procedure GoFlight;
 begin
   Scene := Flight;
-  AppAnimal := ALL_CREATURES[Random(NCREATURES)+1];
+  AppAnimal := @ALL_CREATURES[Random(NCREATURES)+1];
   AppMissing := Random(NPARTS)+1;
   SomeAction := True;
 end;
@@ -182,13 +190,13 @@ begin
     if Index = 0 then
       PaintColor := 0
     else
-      PaintColor := AppAnimal.Palette[Index];
+      PaintColor := AppAnimal^.Palette[Index];
   end;
 
   if index = 0 then
     toshow := $FFFFFFFF
   else
-    toshow := AppAnimal.Palette[Index];
+    toshow := AppAnimal^.Palette[Index];
 
   SetLayer(101);
   Ellipse(x+ShapeW/2, y+ShapeH/2, ShapeW/2 - 5, ShapeH/2 - 5,true,toshow);
@@ -199,7 +207,7 @@ procedure DrawPalette;
 var
   i: Integer;
 begin
-  for i := 0 to AppAnimal.PaletteSize do
+  for i := 0 to AppAnimal^.PaletteSize do
     OneColor(i, ColorX1 + (i mod 2) * ColorDX, ColorY1 + (i div 2) * ColorDY);
 end;
 
@@ -269,9 +277,6 @@ begin
 
   DrawPalette;
 
-  //Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,true,$FFFFFF9F);
-  //Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,false,$000000FF);
-
   Sprite(RES.Empty, PaintX, PaintY);
 
   cx := MouseGet(CursorX) - (PaintX-PaintW/2);
@@ -317,8 +322,11 @@ var
 begin
   for i := 0 to NPARTS do
     if i <> AppMissing then
-      Sprite(AppAnimal.Layers[I], PaintX, PaintY);
+      Sprite(AppAnimal^.Layers[I], AppBaseX, AppBaseY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
+
+  if AppCurChild <> nil then
+    Sprite(AppAnimal^.Small, ChildX, ChildY);
 
   if MouseState(LeftButton) = mbsDown then
   begin
@@ -345,12 +353,12 @@ end;
 procedure DrawFlight;
 begin
   FontConfig(RES.Vera, 48, BLACK);
-  DrawText(RES.Vera, PChar(AppAnimal.Name+' ждет новый '+AppAnimal.LayerNames[AppMissing]), MsgX, MsgY);
+  DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
 end;
 
 procedure UpdateImage;
 begin
-  DrawRotatedCrunch(RES.Empty, AppAnimal.Layers[AppMissing], AppX - PaintX, AppY - PaintY, 1, 1, AppAngle);
+  DrawRotatedCrunch(RES.Empty, AppAnimal^.Layers[AppMissing], AppX - PaintX, AppY - PaintY, 1, 1, AppAngle);
   DrawRotatedCrunch(RES.Empty2, Res.Empty, 0,0);
 end;
 
