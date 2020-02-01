@@ -64,7 +64,7 @@ var
   ActiveShape: TSprite = res_Ashape1;
   prevx, prevy: TCoord;
 
-  SomeAction: Boolean;
+  SomeAction: Int64;
 
 
 
@@ -107,7 +107,7 @@ begin
   Scene := Paint;
   PaintColor:=$000000FF;
   PaintR:=3;
-  SomeAction := False;
+  SomeAction := -1;
 end;
 
 procedure GoApplication;
@@ -116,14 +116,14 @@ begin
   AppY := AppBaseY;
   AppAngle := 0;
   Scene := Application;
-  SomeAction := False;
+  SomeAction := -1;
   AppCurChild := @ALL_CREATURES[Random(NCREATURES)+1];
 end;
 
 procedure DrawCircle(cx, cy: TCoord);
 begin
   DrawRotatedCrunch(ActiveShape, Res.Empty, cx-ShapeW/4, cy-ShapeH/4, PaintR / ShapeW, PaintR / ShapeH, 1, PaintColor, False);
-  SomeAction := True;
+  if SomeAction < 0 then SomeAction := GetTickCount64+10000;
 end;
 
 procedure GoFlight;
@@ -131,7 +131,7 @@ begin
   Scene := Flight;
   AppAnimal := @ALL_CREATURES[Random(NCREATURES)+1];
   AppMissing := Random(NPARTS)+1;
-  SomeAction := True;
+  SomeAction := GetTickCount64;
 end;
 
 function ShowPaintColor: TColor;
@@ -233,7 +233,7 @@ procedure DrawAddButtons;
 begin
   Button(RES.Hud.Settings, 0, 57, 890, 59, 61);
   Button(RES.Hud.World, 0, 190, 885, 70, 70);
-  if SomeAction then
+  if (SomeAction >= 0) and (SomeAction < GetTickCount64)  then
   begin
     if Button(RES.Hud.Go, 0, 1632, 858, 250, 134) = bsClicked then
       GoNextStage;
@@ -339,7 +339,7 @@ begin
     begin
       AppX := AppX + MouseGet(CursorX) - prevx;
       AppY := AppY + MouseGet(CursorY) - prevy;
-      SomeAction := True;
+      if SomeAction < 0 then SomeAction := GetTickCount64+4000;
       prevx := MouseGet(CursorX);
       prevy := MouseGet(CursorY);
     end;
