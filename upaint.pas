@@ -271,7 +271,9 @@ begin
       GoNextStage;
   end
   else
-    Button(RES.Hud.Stop, 0, 1628, 859, 257, 137)
+    if Button(RES.Hud.Stop, 0, 1628, 859, 257, 137) = bsClicked then
+    GoNextStage;
+    //Button(RES.Hud.Stop, 0, 1628, 859, 257, 137)
 end;
 
 procedure GoNextStage;
@@ -396,7 +398,7 @@ end;
 procedure UpdateImage;
 begin
   AppAnimal^.WasFixed[AppMissing] := True;
-  DrawRotatedCrunch(RES.Empty, AppAnimal^.Layers[AppMissing], AppX - PaintX, AppY - PaintY, 1, 1, AppAngle);
+  DrawRotatedCrunch(RES.Empty, AppAnimal^.Layers[AppMissing], AppX - AppBaseX, AppY - AppBaseY, 1, 1, AppAngle);
   DrawRotatedCrunch(RES.Empty2, Res.Empty, 0,0);
 end;
 
