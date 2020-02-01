@@ -22,7 +22,7 @@ type
     FoodTimer: int64;
     SmileTimer: int64;
     NeedFood: TFood;
-    Img: TSprite;
+    PreImg, Img: TSprite;
 
     constructor Create;
     procedure Draw;
@@ -110,6 +110,7 @@ begin
     H := CellH;
     Child := Bird;
     Img := RES.Cells.Nest;
+    PreImg := RES.Cells.Nest;
   end;
 
   ALL_CELLS[3] := TCell.Create;
@@ -136,6 +137,7 @@ procedure TCell.Draw;
 var
   scale: TCoord;
 begin
+  if Child = Bird then Sprite(PreImg, X + W / 2, Y + H / 2);
   if Filled and ((DragMode <> DragChild) or (DragItem <> Index)) then
   begin
     Sprite(Parent^.Small, X + W / 2, Y + H / 2);
