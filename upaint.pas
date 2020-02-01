@@ -11,6 +11,12 @@ type
   TScene = (Flight, Paint, Application);
 
 const
+
+  PrinterX=434;
+  PrinterY=39;
+  PrinterW=1102;
+  PrinterH=744;
+
   PaintX = 656+300;
   PaintY = 93+300;
   PaintW = 600;
@@ -37,6 +43,36 @@ const
   ColorDX = 110;
   ColorDY = 75;
 
+  CellW = 320;
+  CellH = 206;
+
+  CellX1 = 0;
+  CellY1 = 65;
+
+  CellX2 = -1;
+  CellY2 = 342;
+
+  CellX3 = 1584;
+  CellY3 = 66;
+
+  CellX4 = 1600;
+  CellY4 = 342;
+
+  FoodW = 164;
+  FoodH = 164;
+
+  FoodX1 = 347;
+  FoodY1 = 835;
+  FoodX2 = 562;
+  FoodY2 = 835;
+  FoodX3 = 776;
+  FoodY3 = 835;
+  FoodX4 = 990;
+  FoodY4 = 835;
+  FoodX5 = 1205;
+  FoodY5 = 835;
+  FoodX6 = 1419;
+  FoodY6 = 835;
 
 var
   Scene: TScene;
@@ -52,6 +88,8 @@ var
   ActiveShape: TSprite = res_Ashape1;
   prevx, prevy: TCoord;
 
+  SomeAction: Boolean;
+
 
 
 procedure DrawScene;
@@ -61,6 +99,7 @@ procedure GoPaint;
 procedure GoApplication;
 procedure GoFlight;
 
+procedure GoNextStage;
 
 procedure DrawBasic;
 
@@ -71,7 +110,6 @@ procedure DrawFlight;
 procedure UpdateImage;
 
 procedure BuildPalettes;
-
 
 implementation
 
@@ -91,6 +129,7 @@ begin
   Scene := Paint;
   PaintColor:=$000000FF;
   PaintR:=3;
+  SomeAction := False;
 end;
 
 procedure GoApplication;
@@ -99,11 +138,13 @@ begin
   AppY := PaintY;
   AppAngle := 0;
   Scene := Application;
+  SomeAction := False;
 end;
 
 procedure DrawCircle(cx, cy: TCoord);
 begin
   DrawRotatedCrunch(ActiveShape, Res.Empty, cx-ShapeW/4, cy-ShapeH/4, PaintR / ShapeW, PaintR / ShapeH, 1, PaintColor, False);
+  SomeAction := True;
 end;
 
 procedure GoFlight;
@@ -111,6 +152,7 @@ begin
   Scene := Flight;
   AppAnimal := ALL_CREATURES[Random(NCREATURES)+1];
   AppMissing := Random(NPARTS)+1;
+  SomeAction := True;
 end;
 
 function ShowPaintColor: TColor;
@@ -190,9 +232,63 @@ begin
     OneColor(i, ColorX1 + (i mod 2) * ColorDX, ColorY1 + (i div 2) * ColorDY);
 end;
 
+procedure DrawCells;
+begin
+  Sprite(RES.Cells.Fence, CellX1+CellW/2, CellY1+CellH/2);
+  Sprite(RES.Cells.Fence2, CellX2+CellW/2, CellY2+CellH/2);
+  Sprite(RES.Cells.Nest, CellX3+CellW/2, CellY3+CellH/2);
+  Sprite(RES.Cells.Cell, CellX4+CellW/2, CellY4+CellH/2);
+end;
+
+procedure DrawFood;
+begin
+  Sprite(RES.Food.Fish, FoodX1+FoodW/2, FoodY1+FoodH/2);
+  Sprite(RES.Food.Meat, FoodX2+FoodW/2, FoodY2+FoodH/2);
+  Sprite(RES.Food.Grass, FoodX3+FoodW/2, FoodY3+FoodH/2);
+  Sprite(RES.Food.Maracas, FoodX4+FoodW/2, FoodY4+FoodH/2);
+  Sprite(RES.Food.Wash, FoodX5+FoodW/2, FoodY5+FoodH/2);
+  Sprite(RES.Food.Aid, FoodX6+FoodW/2, FoodY6+FoodH/2);
+end;
+
+procedure DrawAddButtons;
+begin
+  Button(RES.Hud.Settings, 0, 57, 890, 59, 61);
+  Button(RES.Hud.World, 0, 190, 885, 70, 70);
+  if SomeAction then
+  begin
+    if Button(RES.Hud.Go, 0, 1632, 858, 250, 134) = bsClicked then
+      GoNextStage;
+  end
+  else
+    Button(RES.Hud.Stop, 0, 1628, 859, 257, 137)
+end;
+
+procedure GoNextStage;
+begin
+  case Scene of
+    Flight: GoPaint;
+    Paint: GoApplication;
+    Application:
+    begin
+      UpdateImage;
+      GoFlight;
+    end;
+  end;
+end;
+
 procedure DrawBasic;
 begin
   Background(RES.Back);
+  DrawCells;
+  DrawFood;
+  DrawAddButtons;
+end;
+
+procedure DrawPaint;
+var
+  cx, cy,dx,dy,dh, step: TCoord;
+begin
+  Sprite(RES.Printer, PrinterX+PrinterW/2, PrinterY+PrinterH/2);
   DrawBar;
 
   OneShape(1, RES.Paint.Shape1, RES.Paint.Ashape1, ShapeX1, ShapeY1);
@@ -202,53 +298,46 @@ begin
 
   DrawPalette;
 
-end;
-
-procedure DrawPaint;
-var
-  cx, cy,dx,dy,dh, step: TCoord;
-begin
-  Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,true,$FFFFFF9F);
-  Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,false,$000000FF);
+  //Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,true,$FFFFFF9F);
+  //Rect(PaintX-PaintW/2, PaintY-PaintH/2, PaintW,PaintH,false,$000000FF);
 
   Sprite(RES.Empty, PaintX, PaintY);
 
   cx := MouseGet(CursorX) - (PaintX-PaintW/2);
   cy := MouseGet(CursorY) - (PaintY-PaintH/2);
   if InRange(cx, 0, PaintW-1) and InRange(cy, 0, PaintH-1)then
+  begin
+    if MouseState(LeftButton) = mbsDown then
     begin
-      if MouseState(LeftButton) = mbsDown then
+      if prevx < 0 then
       begin
-        if prevx < 0 then
-        begin
-          prevx := cx;
-          prevy := cy;
-          DrawCircle(cx, cy);
-        end
-        else
-        begin
-          dx := cx-prevx;
-          dy := cy-prevy;
-          dh := hypot(dx, dy);
-          step := 0;
-          while step < dh do
-          begin
-            prevx := prevx + dx/dh*0.5;
-            prevy := prevy + dy/dh*0.5;
-            step := step+0.5;
-            DrawCircle(prevx, prevy);
-          end;
-          DrawCircle(cx, cy);
-          prevx := cx;
-          prevy := cy;
-        end;
+        prevx := cx;
+        prevy := cy;
+        DrawCircle(cx, cy);
       end
       else
-        prevx := -1;
-    end;
-
-  if KeyState(KeyReturn) = ksPressed then
-    GoApplication;
+      begin
+        dx := cx-prevx;
+        dy := cy-prevy;
+        dh := hypot(dx, dy);
+        step := 0;
+        while step < dh do
+        begin
+          prevx := prevx + dx/dh*0.5;
+          prevy := prevy + dy/dh*0.5;
+          step := step+0.5;
+          DrawCircle(prevx, prevy);
+        end;
+        DrawCircle(cx, cy);
+        prevx := cx;
+        prevy := cy;
+      end;
+    end
+    else
+      prevx := -1;
+  end
+  else
+    prevx := -1;
 end;
 
 procedure DrawApplication;
@@ -271,6 +360,7 @@ begin
     begin
       AppX := AppX + MouseGet(CursorX) - prevx;
       AppY := AppY + MouseGet(CursorY) - prevy;
+      SomeAction := True;
       prevx := MouseGet(CursorX);
       prevy := MouseGet(CursorY);
     end;
@@ -279,21 +369,12 @@ begin
     prevx := -1;
   if MouseGet(ScrollPos) <> 0 then
     AppAngle := AppAngle + MouseGet(ScrollPos);
-
-  if KeyState(KeyReturn) = ksPressed then
-  begin
-    UpdateImage;
-    GoFlight;
-  end;
 end;
 
 procedure DrawFlight;
 begin
   FontConfig(RES.Vera, 48, BLACK);
   DrawText(RES.Vera, PChar(AppAnimal.Name+' ждет новый '+AppAnimal.LayerNames[AppMissing]), MsgX, MsgY);
-
-  if KeyState(KeyReturn) = ksPressed then
-    GoPaint;
 end;
 
 procedure UpdateImage;
