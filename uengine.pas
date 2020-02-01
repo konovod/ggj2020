@@ -81,9 +81,9 @@ type
 
 
   //can be redefined in project to enums
-  TPanel = Integer;
-  TMaterial = Integer;
-  TPolygon = Integer;
+  TPanel = integer;
+  TMaterial = integer;
+  TPolygon = integer;
 
   TCoord = single;
   TColor = cardinal;
@@ -109,7 +109,7 @@ type
 
   TPathfindCallback = function(fromx, fromy, tox, toy: integer; opaque: pointer): single;
   TPathfindAlgorithm = (AStarNew, AStarReuse, DijkstraNew, DijkstraReuse);
-  
+
 const
   nonoengine = 'nonoengine.dll';
 
@@ -173,7 +173,8 @@ procedure SetLayer(z: integer); cdecl; external nonoengine;
 procedure Camera(dx, dy: TCoord; kx: single = 1; ky: single = 1; angle: single = 0);
   cdecl; external nonoengine;
 procedure RenderTo(sprite: TSprite); cdecl; external nonoengine;
-procedure SetPixel(sprite: TSprite; x, y: TCoord; Color: TColor); cdecl;external nonoengine;
+procedure SetPixel(sprite: TSprite; x, y: TCoord; Color: TColor);
+  cdecl; external nonoengine;
 
 //2д-рендер - вывод текста
 procedure FontConfig(font: TFont; CharSize: integer = 24; color: TColor = WHITE;
@@ -207,25 +208,36 @@ function Pathfind(SizeX, SizeY: integer; algorithm: TPathfindAlgorithm;
   cdecl; external nonoengine;
 
 //физика
-procedure Material(Material: TMaterial; Density, Friction, Elasticity: Double; IsStatic: boolean; IsPersistent: boolean; DefRadius: Double); cdecl; external nonoengine;
-procedure MaterialCollisions(first, second: TMaterial; ShouldHit: boolean; NeedProcessing: Boolean); cdecl; external nonoengine;
+procedure Material(Material: TMaterial; Density, Friction, Elasticity: double;
+  IsStatic: boolean; IsPersistent: boolean; DefRadius: double); cdecl;
+  external nonoengine;
+procedure MaterialCollisions(First, second: TMaterial; ShouldHit: boolean;
+  NeedProcessing: boolean); cdecl; external nonoengine;
 
 procedure PolygonReset(p: TPolygon); cdecl; external nonoengine;
 procedure PolygonAdd(p: TPolygon; x, y: TCoord); cdecl; external nonoengine;
 procedure PolygonClose(p: TPolygon); cdecl; external nonoengine;
-procedure PolygonDraw(p: TPolygon; c: TColor; sprite: TSprite; dx: TCoord = 0; dy: TCoord = 0; kx: TCoord = 1; ky: TCoord = 1); cdecl; external nonoengine;
+procedure PolygonDraw(p: TPolygon; c: TColor; sprite: TSprite;
+  dx: TCoord = 0; dy: TCoord = 0; kx: TCoord = 1; ky: TCoord = 1);
+  cdecl; external nonoengine;
 
-procedure ShapeCircle(Material: TMaterial; id: pointer; var x, y, vx, vy, a: TCoord); cdecl; external nonoengine;
-procedure ShapeBox(Material: TMaterial; id: pointer; x1, y1, x2, y2: TCoord); cdecl; external nonoengine;
-procedure ShapePoly(Material: TMaterial; id: pointer; poly: TPolygon; var x, y, vx, vy, a: TCoord); cdecl; external nonoengine;
+procedure ShapeCircle(Material: TMaterial; id: pointer; var x, y, vx, vy, a: TCoord);
+  cdecl; external nonoengine;
+procedure ShapeBox(Material: TMaterial; id: pointer; x1, y1, x2, y2: TCoord);
+  cdecl; external nonoengine;
+procedure ShapePoly(Material: TMaterial; id: pointer; poly: TPolygon;
+  var x, y, vx, vy, a: TCoord); cdecl; external nonoengine;
 procedure BodyDelete(Material: TMaterial; id: pointer); cdecl; external nonoengine;
-function BodyCollided(MyMaterial: TMaterial; MyID: pointer; WithMaterial: TMaterial; out WithID: pointer): boolean; cdecl; external nonoengine;
-procedure SetCurrentCollision(React: Boolean); cdecl; external nonoengine;
-procedure ShapeApplyForce(Material: TMaterial; id: pointer; fx, fy, dx, dy, moment: TCoord); cdecl; external nonoengine;
+function BodyCollided(MyMaterial: TMaterial; MyID: pointer;
+  WithMaterial: TMaterial; out WithID: pointer): boolean; cdecl; external nonoengine;
+procedure SetCurrentCollision(React: boolean); cdecl; external nonoengine;
+procedure ShapeApplyForce(Material: TMaterial; id: pointer;
+  fx, fy, dx, dy, moment: TCoord); cdecl; external nonoengine;
 
 
-procedure DrawRotatedCrunch(afrom, ato: TSprite; x, y: TCoord; kx: single = 1;
-  ky: single = 1; angle: single = 0; Color: TColor = WHITE; Clear: Boolean = True);cdecl;external nonoengine;
+procedure DrawRotatedCrunch(afrom, ato: TSprite; x, y: TCoord;
+  kx: single = 1; ky: single = 1; angle: single = 0; Color: TColor = WHITE;
+  Clear: boolean = True); cdecl; external nonoengine;
 
 implementation
 

@@ -13,14 +13,14 @@ type
   { TCell }
 
   TCell = class
-    Index: Integer;
-    X,Y,W,H: TCoord;
+    Index: integer;
+    X, Y, W, H: TCoord;
     Child: TChild;
 
-    Filled: Boolean;
+    Filled: boolean;
     Parent: PCreature;
-    FoodTimer: Int64;
-    SmileTimer: Int64;
+    FoodTimer: int64;
+    SmileTimer: int64;
     NeedFood: TFood;
     Img: TSprite;
 
@@ -31,7 +31,7 @@ type
   end;
 
   TFoodData = record
-    X,Y: TCoord;
+    X, Y: TCoord;
     Img: TSprite;
   end;
 
@@ -61,9 +61,9 @@ const
     (X: 990; Y: 835; Img: res_Maracas),
     (X: 1205; Y: 835; Img: res_Wash),
     (X: 1419; Y: 835; Img: res_Aid)
-  );
+    );
 
-  Eats: array[TChild] of TFood = (Grass,Fish,Meat);
+  Eats: array[TChild] of TFood = (Grass, Fish, Meat);
 
 var
   ALL_CELLS: array of TCell;
@@ -136,29 +136,31 @@ procedure TCell.Draw;
 var
   scale: TCoord;
 begin
-  Sprite(Img, X+W/2, Y+H/2);
-  if Filled and ((DragMode <> DragChild)or(DragItem <> Index) )then
+  Sprite(Img, X + W / 2, Y + H / 2);
+  if Filled and ((DragMode <> DragChild) or (DragItem <> Index)) then
   begin
-    Sprite(Parent^.Small, X+W/2, Y+H/2);
+    Sprite(Parent^.Small, X + W / 2, Y + H / 2);
     if GetTickCount64 mod 1000 > 450 then
       scale := 1.1
     else
       scale := 0.95;
     if (SmileTimer > GetTickCount64) then
-      Sprite(RES.Happy, X+W/4, Y+H/4, scale, scale)
+      Sprite(RES.Happy, X + W / 4, Y + H / 4, scale, scale)
     else if (FoodTimer > 0) and (FoodTimer < GetTickCount64) then
-      Sprite(RES.Cry, X+W/4, Y+H/4, scale, scale)
+      Sprite(RES.Cry, X + W / 4, Y + H / 4, scale, scale);
   end;
 end;
 
 procedure TCell.StartTimer;
 begin
-  if not Filled then exit;
-  FoodTimer := GetTickCount64 + (10+Random(10))*(1000+random(100));
+  if not Filled then
+    exit;
+  FoodTimer := GetTickCount64 + (5 + Random(10)) * (1000 + random(100));
   case random(4) of
     0: NeedFood := Eats[Child];
     1: NeedFood := Wash;
-    else NeedFood := Game;
+    else
+      NeedFood := Game;
   end;
 end;
 
@@ -169,4 +171,3 @@ begin
 end;
 
 end.
-

@@ -5,26 +5,26 @@ unit uDrag;
 interface
 
 uses
-  Classes, SysUtils, uEngine, Resources, uCreature,  Math;
+  Classes, SysUtils, uEngine, Resources, uCreature, Math;
 
 type
   TDragMode = (NoDrag, DragChild, DragFood);
 
 var
-DragMode: TDragMode;
-DragItem: Integer;
+  DragMode: TDragMode;
+  DragItem: integer;
 
-function ProcessDrag: Boolean;
-function CheckDragStart(X, Y: TCoord): Boolean;
-function CheckDragDrop(X, Y: TCoord): Boolean;
+function ProcessDrag: boolean;
+function CheckDragStart(X, Y: TCoord): boolean;
+function CheckDragDrop(X, Y: TCoord): boolean;
 procedure ResetDrag;
 procedure DrawDrag;
 
 implementation
 
-uses uChildren,uPaint;
+uses uChildren, uPaint;
 
-function ProcessDrag: Boolean;
+function ProcessDrag: boolean;
 begin
   if DragMode <> NoDrag then
   begin
@@ -38,7 +38,7 @@ begin
   else
   begin
     Result := (MouseState(LeftButton) = mbsDown) and
-       CheckDragStart(MouseGet(CursorX), MouseGet(CursorY));
+      CheckDragStart(MouseGet(CursorX), MouseGet(CursorY));
   end;
 end;
 
@@ -47,22 +47,23 @@ var
   cell: TCell;
 begin
   for cell in ALL_CELLS do
-    if InRange(X, cell.X, Cell.X+cell.W) and InRange(Y, cell.Y, Cell.Y+cell.H) then
+    if InRange(X, cell.X, Cell.X + cell.W) and InRange(Y, cell.Y, Cell.Y + cell.H) then
     begin
       Result := cell;
-      exit
+      exit;
     end;
   Result := nil;
 end;
 
-function CheckDragStart(X, Y: TCoord): Boolean;
+function CheckDragStart(X, Y: TCoord): boolean;
 var
   fd: TFood;
   cell: TCell;
 begin
   //check food
   for fd in TFood do
-    if InRange(X, FOOD_POS[fd].X, FOOD_POS[fd].X+FoodW) and InRange(Y, FOOD_POS[fd].Y, FOOD_POS[fd].Y+FoodH) then
+    if InRange(X, FOOD_POS[fd].X, FOOD_POS[fd].X + FoodW) and
+      InRange(Y, FOOD_POS[fd].Y, FOOD_POS[fd].Y + FoodH) then
     begin
       DragMode := DragFood;
       DragItem := Ord(fd);
@@ -79,17 +80,19 @@ begin
     exit;
   end;
   //check child
-  if Assigned(AppCurChild)and (Scene = Application) and InRange(X, ChildX-CellW/2, ChildX+CellW/2) and InRange(Y, ChildY-CellH/2, ChildY+CellH/2) and (AppCurChild <> AppAnimal) then
-    begin
-      DragMode := DragChild;
-      DragItem := -1;
-      Result := True;
-      exit;
-    end;
+  if Assigned(AppCurChild) and (Scene = Application) and
+    InRange(X, ChildX - CellW / 2, ChildX + CellW / 2) and
+    InRange(Y, ChildY - CellH / 2, ChildY + CellH / 2) and (AppCurChild <> AppAnimal) then
+  begin
+    DragMode := DragChild;
+    DragItem := -1;
+    Result := True;
+    exit;
+  end;
   Result := False;
 end;
 
-function CheckDragDrop(X, Y: TCoord): Boolean;
+function CheckDragDrop(X, Y: TCoord): boolean;
 var
   cell: TCell;
   animal: PCreature;
@@ -98,54 +101,62 @@ begin
   case DragMode of
     NoDrag: exit;
     DragFood:
-      begin
-        cell := FindCell(X, Y);
-        if not Assigned(cell) then exit;
-        if (cell.FoodTimer <= 0) or (cell.FoodTimer > GetTickCount64) then exit;
-        if cell.NeedFood <> uChildren.TFood(DragItem) then exit;
-        Result := True;
-        cell.StartTimer;
-        cell.SmileTimer := GetTickCount64+2000;
-      end;
+    begin
+      cell := FindCell(X, Y);
+      if not Assigned(cell) then
+        exit;
+      if (cell.FoodTimer <= 0) or (cell.FoodTimer > GetTickCount64) then
+        exit;
+      if cell.NeedFood <> uChildren.TFood(DragItem) then
+        exit;
+      Result := True;
+      cell.StartTimer;
+      cell.SmileTimer := GetTickCount64 + 2000;
+    end;
     DragChild:
+    begin
+      if DragItem < 0 then
+        animal := AppCurChild
+      else
+        animal := ALL_CELLS[DragItem].Parent;
+      cell := FindCell(X, Y);
+      if cell = nil then
       begin
-        if DragItem < 0 then
-          animal := AppCurChild
-        else
-          animal := ALL_CELLS[DragItem].Parent;
-        cell := FindCell(X, Y);
-        if cell = nil then
+        if True {TODO - near the center} then
         begin
-          if true {TODO - near the center} then
-          begin
-            if AppCurChild <> nil then exit;
-            if AppAnimal <> animal then exit;
-            //drop old item
-            if DragItem < 0 then exit;
-            ALL_CELLS[DragItem].Filled := False;
-            ALL_CELLS[DragItem].StopTimer;
-            AppCurChild := animal;
-            //TODO well, child found
-          end;
-        end
-        else
-        begin
-          if cell.Filled then exit;
-          if cell.Child <> animal^.Child then exit;
+          if AppCurChild <> nil then
+            exit;
+          if AppAnimal <> animal then
+            exit;
           //drop old item
           if DragItem < 0 then
-            AppCurChild := nil
-          else
-          begin
-            ALL_CELLS[DragItem].StopTimer;
-            ALL_CELLS[DragItem].Filled := False;
-          end;
-
-          cell.Filled := True;
-          cell.Parent := animal;
-          cell.StartTimer;
+            exit;
+          ALL_CELLS[DragItem].Filled := False;
+          ALL_CELLS[DragItem].StopTimer;
+          AppCurChild := animal;
+          //TODO well, child found
         end;
+      end
+      else
+      begin
+        if cell.Filled then
+          exit;
+        if cell.Child <> animal^.Child then
+          exit;
+        //drop old item
+        if DragItem < 0 then
+          AppCurChild := nil
+        else
+        begin
+          ALL_CELLS[DragItem].StopTimer;
+          ALL_CELLS[DragItem].Filled := False;
+        end;
+
+        cell.Filled := True;
+        cell.Parent := animal;
+        cell.StartTimer;
       end;
+    end;
   end;
 end;
 
@@ -163,7 +174,8 @@ begin
   case DragMode of
     NoDrag: ;
     DragFood:
-      Sprite(FOOD_POS[TFood(DragItem)].Img, MouseGet(CursorX), MouseGet(CursorY), 0.8, 0.8);
+      Sprite(FOOD_POS[TFood(DragItem)].Img, MouseGet(CursorX),
+        MouseGet(CursorY), 0.8, 0.8);
     DragChild:
     begin
       if DragItem < 0 then
@@ -177,4 +189,3 @@ begin
 end;
 
 end.
-
