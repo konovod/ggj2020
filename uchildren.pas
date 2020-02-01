@@ -9,6 +9,7 @@ uses
 
 type
 
+  TFood = (Fish, Meat, Grass, Game, Wash, Aid);
   { TCell }
 
   TCell = class
@@ -26,7 +27,6 @@ type
     procedure Draw;
   end;
 
-  TFood = (Fish, Meat, Grass, Game, Wash, Aid);
   TFoodData = record
     X,Y: TCoord;
     Img: TSprite;

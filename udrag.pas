@@ -26,7 +26,20 @@ uses uPaint;
 
 function ProcessDrag: Boolean;
 begin
-  Result := False;
+  if DragMode <> NoDrag then
+  begin
+    Result := True;
+    if MouseState(LeftButton) <> mbsDown then
+    begin
+      CheckDragDrop(MouseGet(CursorX), MouseGet(CursorY));
+      DragMode := NoDrag;
+    end;
+  end
+  else
+  begin
+    Result := (MouseState(LeftButton) = mbsDown) and
+       CheckDragStart(MouseGet(CursorX), MouseGet(CursorY));
+  end;
 end;
 
 function FindCell(X, Y: TCoord): TCell;
@@ -46,7 +59,6 @@ function CheckDragStart(X, Y: TCoord): Boolean;
 var
   fd: TFood;
   cell: TCell;
-  ani: PCreature;
 begin
   //check food
   for fd in TFood do
@@ -90,7 +102,7 @@ begin
         cell := FindCell(X, Y);
         if not Assigned(cell) then exit;
         if (cell.FoodTimer <= 0) or (cell.FoodTimer > GetTickCount64) then exit;
-        if cell.NeedFood <> TFood(DragItem) then exit;
+        if cell.NeedFood <> uChildren.TFood(DragItem) then exit;
         Result := True;
         //TODO Food aten, now create next food
       end;
@@ -120,25 +132,43 @@ begin
           if cell.Child <> animal^.Child then exit;
           //drop old item
           if DragItem < 0 then
-            AppCurChild                                          ;
-          ALL_CELLS[DragItem].Filled := False;
-          cell.Filled := True;
-          //TODO well, child found
-        end;
+            AppCurChild := nil
+          else
+            ALL_CELLS[DragItem].Filled := False;
 
+          cell.Filled := True;
+          cell.Parent := animal;
+          //TODO child placed, start food timer
+        end;
       end;
   end;
-
 end;
 
 procedure ResetDrag;
 begin
-
+  DragMode := NoDrag;
+  DragItem := -1;
 end;
 
 procedure DrawDrag;
+var
+  animal: PCreature;
 begin
-
+  SetLayer(102);
+  case DragMode of
+    NoDrag: ;
+    DragFood:
+      Sprite(FOOD_POS[TFood(DragItem)].Img, MouseGet(CursorX), MouseGet(CursorY), 0.8, 0.8);
+    DragChild:
+    begin
+      if DragItem < 0 then
+        animal := AppCurChild
+      else
+        animal := ALL_CELLS[DragItem].Parent;
+      Sprite(animal^.Small, MouseGet(CursorX), MouseGet(CursorY));
+    end;
+  end;
+  SetLayer(1);
 end;
 
 end.

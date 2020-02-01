@@ -160,11 +160,14 @@ var
 begin
   if Button(RES.Paint.Bar, 0, BarX, BarY, BarW, BarH) = bsPressed then
   begin
-    x := GetGUICoord(gcX);
-    y := GetGUICoord(gcY);
-    w := GetGUICoord(gcWidth);
-    h := GetGUICoord(gcHeight);
-    PaintR := EnsureRange(Trunc((MouseGet(CursorY) - y) / GetGUICoord(gcHeight) * PaintMaxR), 1, PaintMaxR);
+    if not ProcessDrag then
+    begin
+      x := GetGUICoord(gcX);
+      y := GetGUICoord(gcY);
+      w := GetGUICoord(gcWidth);
+      h := GetGUICoord(gcHeight);
+      PaintR := EnsureRange(Trunc((MouseGet(CursorY) - y) / GetGUICoord(gcHeight) * PaintMaxR), 1, PaintMaxR);
+    end
   end;
   x := GetGUICoord(gcX);
   y := GetGUICoord(gcY);
@@ -186,10 +189,13 @@ var
 begin
   if Button(Res.Paint.Color, 0, x, y, ShapeW, ShapeH) = bsPressed then
   begin
-    if Index = 0 then
-      PaintColor := 0
-    else
-      PaintColor := AppAnimal^.Palette[Index];
+    if not ProcessDrag then
+    begin
+      if Index = 0 then
+        PaintColor := 0
+      else
+        PaintColor := AppAnimal^.Palette[Index];
+    end;
   end;
 
   if index = 0 then
@@ -258,6 +264,7 @@ begin
   DrawCells;
   DrawFood;
   DrawAddButtons;
+  DrawDrag;
 end;
 
 procedure DrawPaint;
@@ -353,6 +360,7 @@ procedure DrawFlight;
 begin
   FontConfig(RES.Vera, 48, BLACK);
   DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
+  ProcessDrag;
 end;
 
 procedure UpdateImage;
