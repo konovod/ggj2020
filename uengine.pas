@@ -224,7 +224,8 @@ procedure SetCurrentCollision(React: Boolean); cdecl; external nonoengine;
 procedure ShapeApplyForce(Material: TMaterial; id: pointer; fx, fy, dx, dy, moment: TCoord); cdecl; external nonoengine;
 
 
-procedure DrawRotatedCrunch(afrom, ato: TSprite; x, y, angle: TCoord);cdecl;external nonoengine;
+procedure DrawRotatedCrunch(afrom, ato: TSprite; x, y: TCoord; kx: single = 1;
+  ky: single = 1; angle: single = 0; Color: TColor = WHITE; Clear: Boolean = True);cdecl;external nonoengine;
 
 implementation
 
