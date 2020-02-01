@@ -20,9 +20,9 @@ const
   MsgX = 656;
   MsgY = 150;
 
-  BarX = 532;
+  BarX = 492;
   BarY = 323;
-  BarW = 20;
+  BarW = 100;
   BarH = 232;
 
   ShapeX1 = 460;
@@ -138,7 +138,14 @@ procedure DrawBar;
 var
   x, y, w, h: TCoord;
 begin
-  Button(RES.Paint.Bar, 0, BarX, BarY, BarW, BarH);
+  if Button(RES.Paint.Bar, 0, BarX, BarY, BarW, BarH) = bsPressed then
+  begin
+    x := GetGUICoord(gcX);
+    y := GetGUICoord(gcY);
+    w := GetGUICoord(gcWidth);
+    h := GetGUICoord(gcHeight);
+    PaintR := EnsureRange(Trunc((MouseGet(CursorY) - y) / GetGUICoord(gcHeight) * PaintMaxR), 1, PaintMaxR);
+  end;
   x := GetGUICoord(gcX);
   y := GetGUICoord(gcY);
   w := GetGUICoord(gcWidth);
@@ -240,14 +247,6 @@ begin
         prevx := -1;
     end;
 
-  if MouseGet(ScrollPos) <> 0 then
-    PaintR := EnsureRange(PaintR+Trunc(MouseGet(ScrollPos)), 1, PaintMaxR);
-  if MouseState(RightButton) = mbsClicked then
-    if PaintColor = 0 then
-      PaintColor := $000000FF
-    else
-      PaintColor := 0;
-
   if KeyState(KeyReturn) = ksPressed then
     GoApplication;
 end;
@@ -324,7 +323,8 @@ begin
   for crindex := 1 to NCREATURES do
   begin
     cr := @ALL_CREATURES[crindex];
-    cr^.PaletteSize := 0;
+    cr^.PaletteSize := 1;
+    cr^.Palette[1] := $000000FF;
     for lay := 0 to NPARTS do
       for i := 0 to PaintW-1 do
         for j := 0 to PaintH-1 do

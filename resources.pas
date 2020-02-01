@@ -4,7 +4,7 @@ interface
 {$J-}
 type
 TRawResource = (TRawResource_NOT_USED);
-TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2);
+TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_3, res_Tukan_body, res_Fence, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Empty, res_Empty2);
 TSound = (NO_MUSIC = -1, TSound_NOT_USED);
 TButton = (res_Bar, res_Color, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
 TTileMap = (TTileMap_NOT_USED);
@@ -16,6 +16,19 @@ TAnimals = record
   Tukan_2: TSprite;
   Tukan_3: TSprite;
   Tukan_body: TSprite;
+end;
+
+TCells = record
+  Fence: TSprite;
+end;
+
+TFood = record
+  Aid: TSprite;
+  Fish: TSprite;
+  Grass: TSprite;
+  Maracas: TSprite;
+  Meat: TSprite;
+  Wash: TSprite;
 end;
 
 TPaint = record
@@ -33,6 +46,8 @@ end;
 
 TRES = record
   Animals: TAnimals;
+  Cells: TCells;
+  Food: TFood;
   Paint: TPaint;
   Back: TSprite;
   Empty: TSprite;
@@ -46,6 +61,17 @@ const RES: TRES = (
     Tukan_2: res_Tukan_2;
     Tukan_3: res_Tukan_3;
     Tukan_body: res_Tukan_body;
+  );
+  Cells: (
+    Fence: res_Fence;
+  );
+  Food: (
+    Aid: res_Aid;
+    Fish: res_Fish;
+    Grass: res_Grass;
+    Maracas: res_Maracas;
+    Meat: res_Meat;
+    Wash: res_Wash;
   );
   Paint: (
     Ashape1: res_Ashape1;
