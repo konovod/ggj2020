@@ -420,19 +420,21 @@ procedure DrawApplication;
 var
   i: integer;
 begin
+  if not HideApps then
+    Sprite(RES.Wall, 356+1205/2, 79+693/2);
   for i := 0 to AppAnimal.NParts do
     if i <> AppMissing then
       Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
   if SomeAction<=0 then
     Sprite(RES.Board, AppX, AppY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
-  if (not HideApps) and SomeAction then
+  if (not HideApps) and (SomeAction>0) then
     DrawRotator;
 
   if (AppCurChild <> nil) and ((DragMode <> DragChild) or (DragItem <> -1)) then
     Sprite(AppCurChild.Small, ChildX, ChildY);
 
-  if not ProcessDrag then
+  if not ProcessDrag and not HideApps then
     if MouseState(LeftButton) = mbsDown then
     begin
       if prevx < 0 then
@@ -458,7 +460,7 @@ begin
     end
     else
       prevx := -1;
-  if MouseGet(ScrollPos) <> 0 then
+  if not HideApps and (MouseGet(ScrollPos) <> 0) then
     AppAngle := AppAngle + MouseGet(ScrollPos) * 4;
   //if HideApps then
   //  Sprite(RES.Happy, 1000, 1000,);
@@ -470,10 +472,11 @@ var
   s: string;
 begin
   FontConfig(RES.Font2, 48, BLACK);
-  s := 'К вам везут ' + AppAnimal.Name +
+  s := 'Док, К вам везут ' + AppAnimal.Name +
     #13#10+AppAnimal.LayerNames[AppMissing];
   if AppCurChild <> nil then
-  s := s+#13#10+'С '+AppAnimal.Gender+' - '+AppCurChild.SmallName+'!';
+    s := s+#13#10+'С '+AppAnimal.Gender+' - '+AppCurChild.SmallName+'!';
+  //s := s+#13#10+#13#10+'{Jhjij'
   DrawTextBoxed(RES.Font2, PChar(s), MsgX-1000, MsgY-1000, 2000, 2000, haCenter, vaCenter);
   ProcessDrag;
 

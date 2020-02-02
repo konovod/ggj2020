@@ -4,7 +4,7 @@ interface
 {$J-}
 type
 TRawResource = (TRawResource_NOT_USED);
-TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_body, res_Zebra_1, res_Zebra_2, res_Zebra_3, res_Zebra_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Nest2, res_Tukan_small, res_Zebra_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Board, res_Cry, res_Empty, res_Empty2, res_Happy, res_Loading_back, res_Poker, res_Printer, res_Rotate, res_Star);
+TSprite = (THE_SCREEN = -1, res_Tukan_1, res_Tukan_2, res_Tukan_body, res_Zebra_1, res_Zebra_2, res_Zebra_3, res_Zebra_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Nest2, res_Tukan_small, res_Zebra_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Board, res_Cry, res_Curtain, res_Empty, res_Empty2, res_Happy, res_Loading_back, res_Poker, res_Printer, res_Rotate, res_Star, res_Wall);
 TSound = (NO_MUSIC = -1, res_Aid_1, res_Bonus, res_Grass_1, res_Meat_1, res_Play, res_Star1, res_Star2);
 TButton = (res_Go, res_Settings, res_Stop, res_World, res_Bar, res_Color, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
 TTileMap = (TTileMap_NOT_USED);
@@ -84,6 +84,7 @@ TRES = record
   Back: TSprite;
   Board: TSprite;
   Cry: TSprite;
+  Curtain: TSprite;
   Empty: TSprite;
   Empty2: TSprite;
   Font1: TFont;
@@ -95,6 +96,7 @@ TRES = record
   Rotate: TSprite;
   Star: TSprite;
   Vera: TFont;
+  Wall: TSprite;
 end;
 
 const RES: TRES = (
@@ -156,6 +158,7 @@ const RES: TRES = (
   Back: res_Back;
   Board: res_Board;
   Cry: res_Cry;
+  Curtain: res_Curtain;
   Empty: res_Empty;
   Empty2: res_Empty2;
   Font1: res_Font1;
@@ -167,6 +170,7 @@ const RES: TRES = (
   Rotate: res_Rotate;
   Star: res_Star;
   Vera: res_Vera;
+  Wall: res_Wall;
 );
 
 implementation

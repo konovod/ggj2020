@@ -102,7 +102,7 @@ begin
   for i := 1 to count div 5 do
   begin
     Play(RES.Sounds.Star1);
-    sleep(15);
+    //sleep(15);
   end;
 end;
 
