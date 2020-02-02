@@ -19,6 +19,8 @@ type
 
   TCreature = class
     Name: string;
+    SmallName: string;
+    Gender: string;
     NParts: Integer;
     Layers: array[0..MAXPARTS] of TSprite;
     LayerNames: array[1..MAXPARTS] of string;
@@ -48,6 +50,8 @@ begin
     Layers[2] := res_Tukan_2; LayerNames[2] := 'Требуется протезирование поврежденных лапок';
     Child := Bird;
     Small := res_Tukan_small;
+    SmallName := 'выпавший из гнезда туканчик';
+    Gender := 'ним';
     PaletteSize := 7;
     Palette[1] := $000000FF;
     Palette[2] := $1B1B48FF;
@@ -69,8 +73,10 @@ begin
     Layers[3] := res_Zebra_3; LayerNames[3] := 'Ей требуется новый хвост';
     Child := Herbivore;
     Small := res_Zebra_small;
+    SmallName := 'отставший от мамы зебренок';
+    Gender := 'ней';
     PaletteSize := 4;
-    Palette[1] := $00000000;
+    Palette[1] := $000000FF;
     Palette[2] := $FFFFFFFF;
     Palette[3] := $B6A48BFF;
     Palette[4] := $5E191DFF;

@@ -56,7 +56,7 @@ var
   i: Integer;
 begin
   Sprite(RES.Star, ScoresX, ScoresY);
-  DrawText(RES.Vera, PChar(IntToStr(Counter)), ScoresX-20, ScoresY);
+  DrawText(RES.Vera, PChar(IntToStr(Counter)), ScoresX+30, ScoresY-30);
   for i := 0 to Length(Flying)-1 do
     Sprite(RES.Star, Flying[i].X, Flying[i].Y, 0.5, 0.5);
 
@@ -80,6 +80,7 @@ begin
 
     if (d < 100) and ((sign(Flying[i].VX) = sign(dx)) or (sign(Flying[i].VY) = sign(dy))) then
     begin
+      Play(RES.Sounds.Star2);
       Flying[i] := Flying[totaln-1];
       dec(totaln);
       Inc(Counter);
@@ -97,6 +98,11 @@ begin
   for i := 1 to count do
   begin
     Flying[Length(Flying) - i] := MakeStar(x+random(50), y+random(50), random(StarsInitial), random(StarsInitial));
+  end;
+  for i := 1 to count div 5 do
+  begin
+    Play(RES.Sounds.Star1);
+    sleep(15);
   end;
 end;
 

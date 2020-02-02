@@ -15,6 +15,7 @@ type
   TCell = class
     Index: integer;
     X, Y, W, H: TCoord;
+    SmileX, SmileY, SmileK: TCoord;
     Child: TChild;
 
     Filled: boolean;
@@ -84,6 +85,9 @@ begin
     Y := CellY1;
     W := CellW;
     H := CellH;
+    SmileX := X + W ;
+    SmileY := Y + H / 4;
+    SmileK := -1;
     Child := Herbivore;
     Img := RES.Cells.Fence;
   end;
@@ -96,6 +100,9 @@ begin
     Y := CellY2;
     W := CellW;
     H := CellH;
+    SmileX := X + W ;
+    SmileY := Y + H / 4;
+    SmileK := -1;
     Child := Herbivore;
     Img := RES.Cells.Fence2;
   end;
@@ -108,6 +115,9 @@ begin
     Y := CellY3;
     W := CellW;
     H := CellH;
+    SmileX := X ;
+    SmileY := Y + H / 4;
+    SmileK := 1;
     Child := Bird;
     Img := RES.Cells.Nest;
     PreImg := RES.Cells.Nest;
@@ -121,6 +131,9 @@ begin
     Y := CellY4;
     W := CellW;
     H := CellH;
+    SmileX := X ;
+    SmileY := Y + H / 4;
+    SmileK := 1;
     Child := Carnivore;
     Img := RES.Cells.Cell;
   end;
@@ -146,11 +159,12 @@ begin
     else
       scale := 0.95;
     if (SmileTimer > GetTickCount64) then
-      Sprite(RES.Happy, X + W / 4, Y + H / 4, scale, scale)
+      Sprite(RES.Happy, SmileX, SmileY, SmileK*scale, scale)
     else if (FoodTimer > 0) and (FoodTimer < GetTickCount64) then
-      Sprite(RES.Cry, X + W / 4, Y + H / 4, scale, scale);
+      Sprite(RES.Cry, SmileX, SmileY, SmileK*scale, scale)
   end;
   Sprite(Img, X + W / 2, Y + H / 2);
+
 end;
 
 procedure TCell.StartTimer;

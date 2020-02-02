@@ -19,10 +19,6 @@ const
   PrinterW = 1102;
   PrinterH = 744;
 
-  PaintX = 656 + 300;
-  PaintY = 93 + 300;
-  PaintW = 600;
-  PaintH = 600;
   PaintMaxR = 20;
 
   MsgX = 1920/2;
@@ -47,11 +43,24 @@ const
 
   ChildX = 1213;
   ChildY = 661;
+
   AppBaseX = 957;
   AppBaseY = 410;
+  AnimalW = 1170;
+  AnimalH = 730;
+
+  PaintX = 656;
+  PaintY = 93;
+  PaintW = 600;
+  PaintH = 600;
+
 
   ChildCaptureX = 0.33;
   ChildCaptureY = 0.5;
+
+
+  CrunchDX = (AnimalW-PaintW)/2-10;
+  CrunchDY = (AnimalH-PaintH)/2-10;
 
 
 var
@@ -92,8 +101,6 @@ procedure DrawFlight;
 
 procedure UpdateImage;
 
-procedure BuildPalettes;
-
 implementation
 
 uses uChildren, uDrag;
@@ -119,8 +126,6 @@ end;
 
 procedure GoApplication;
 var
-  ChildOK: boolean;
-  cell: TCell;
   i, j: Integer;
   c: TColor;
 begin
@@ -129,6 +134,44 @@ begin
   AppAngle := 0;
   Scene := Application;
   SomeAction := -1;
+
+  LimitX1 := PaintW-1;
+  LimitX2 := 1;
+  LimitY1 := PaintH-1;
+  LimitY2 := 1;
+  for i := 0 to PaintW - 1 do
+    for j := 0 to PaintH - 1 do
+    begin
+      c := GetPixel(i,j,RES.Empty);
+      if c and 255 < 250 then
+        continue;
+      if i < LimitX1 then LimitX1 := i;
+      if i > LimitX2 then LimitX2 := i;
+      if j < LimitY1 then LimitY1 := j;
+      if j > LimitY2 then LimitY2 := j;
+    end;
+end;
+
+procedure DrawCircle(cx, cy: TCoord);
+begin
+  DrawRotatedCrunch(ActiveShape, Res.Empty, cx - ShapeW / 4, cy - ShapeH / 4,
+    PaintR / ShapeW, PaintR / ShapeH, 1, PaintColor, False);
+  if SomeAction < 0 then
+    SomeAction := GetTickCount64 + 5000;
+end;
+
+procedure GoFlight;
+var
+  ChildOK: boolean;
+  cell: TCell;
+begin
+  Scene := Flight;
+  AppAnimal := ALL_CREATURES[Random(NCREATURES) + 1];
+  repeat
+    AppMissing := Random(AppAnimal.NParts) + 1;
+  until (not AppAnimal.WasFixed[AppMissing]) or (random < 0.1);
+  SomeAction := GetTickCount64;
+
   ChildOK := False;
   repeat
     AppCurChild := ALL_CREATURES[Random(NCREATURES) + 1];
@@ -159,39 +202,6 @@ begin
   if not ChildOK then
     AppCurChild := nil;
 
-  LimitX1 := PaintW-1;
-  LimitX2 := 1;
-  LimitY1 := PaintH-1;
-  LimitY2 := 1;
-  for i := 0 to PaintW - 1 do
-    for j := 0 to PaintH - 1 do
-    begin
-      c := GetPixel(i,j,RES.Empty);
-      if c and 255 < 250 then
-        continue;
-      if i < LimitX1 then LimitX1 := i;
-      if i > LimitX2 then LimitX2 := i;
-      if j < LimitY1 then LimitY1 := j;
-      if j > LimitY2 then LimitY2 := j;
-    end;
-end;
-
-procedure DrawCircle(cx, cy: TCoord);
-begin
-  DrawRotatedCrunch(ActiveShape, Res.Empty, cx - ShapeW / 4, cy - ShapeH / 4,
-    PaintR / ShapeW, PaintR / ShapeH, 1, PaintColor, False);
-  if SomeAction < 0 then
-    SomeAction := GetTickCount64 + 5000;
-end;
-
-procedure GoFlight;
-begin
-  Scene := Flight;
-  AppAnimal := ALL_CREATURES[Random(NCREATURES) + 1];
-  repeat
-    AppMissing := Random(AppAnimal.NParts) + 1;
-  until (not AppAnimal.WasFixed[AppMissing]) or (random < 0.1);
-  SomeAction := GetTickCount64;
 end;
 
 function ShowPaintColor: TColor;
@@ -347,10 +357,10 @@ begin
 
   DrawPalette;
 
-  Sprite(RES.Empty, PaintX, PaintY);
+  Sprite(RES.Empty, PaintX + PaintW / 2, PaintY + PaintH / 2);
 
-  cx := MouseGet(CursorX) - (PaintX - PaintW / 2);
-  cy := MouseGet(CursorY) - (PaintY - PaintH / 2);
+  cx := MouseGet(CursorX) - PaintX;
+  cy := MouseGet(CursorY) - PaintY;
   if not ProcessDrag then
     if InRange(cx, 0, PaintW - 1) and InRange(cy, 0, PaintH - 1) then
     begin
@@ -447,14 +457,18 @@ end;
 procedure DrawFlight;
 var
   i, j: integer;
+  s: string;
 begin
   FontConfig(RES.Vera, 48, BLACK);
-  DrawTextBoxed(RES.Vera, PChar('К вам везут ' + AppAnimal.Name +
-    #13#10+AppAnimal.LayerNames[AppMissing]), MsgX-500, MsgY-500, 1000, 1000, haCenter, vaCenter);
+  s := 'К вам везут ' + AppAnimal.Name +
+    #13#10+AppAnimal.LayerNames[AppMissing];
+  if AppCurChild <> nil then
+  s := s+#13#10+'С '+AppAnimal.Gender+' - '+AppCurChild.SmallName+'!';
+  DrawTextBoxed(RES.Vera, PChar(s), MsgX-500, MsgY-500, 1000, 1000, haCenter, vaCenter);
   ProcessDrag;
 
 {  for j := 1 to NCREATURES do
-    for i := 0 to NPARTS do
+    for i := 0 to ALL_CREATURES[j].NParts do
       Sprite(ALL_CREATURES[j].Layers[I], 10+j*500, 400);}
 
 
@@ -467,7 +481,7 @@ begin
   Stars.AddStars(15, 1628, 859);
   AppAnimal.WasFixed[AppMissing] := True;
   DrawRotatedCrunch(RES.Empty, AppAnimal.Layers[AppMissing], AppX -
-    AppBaseX - 10, AppY - AppBaseY - 10, 1, 1, AppAngle);
+    AppBaseX +CrunchDX, AppY - AppBaseY + CrunchDY, 1, 1, AppAngle);
   DrawRotatedCrunch(RES.Empty2, Res.Empty, 0, 0);
 end;
 
@@ -479,73 +493,6 @@ begin
   green := abs(((c1 shr 16) and 255) - ((c2 shr 16) and 255));
   blue := abs(((c1 shr 8) and 255) - ((c2 shr 8) and 255));
   Result := red + green + blue;
-end;
-
-procedure BuildPalettes;
-var
-  cr: TCreature;
-  crindex, index, lay, i, j: integer;
-  found: boolean;
-  c: TColor;
-  bestcount, besti: integer;
-  colors: array of TColor;
-  colorscount: array of TColor;
-begin
-  for cr in ALL_CREATURES do
-    for i := 1 to cr.PaletteSize do
-      cr.Palette[i] := (cr.Palette[i] and (not 255)) or 255;
-  exit;
-  for crindex := 1 to NCREATURES do
-  begin
-    cr := ALL_CREATURES[crindex];
-
-    SetLength(colors, 0);
-    SetLength(colorscount, 0);
-    for lay := 0 to cr.NParts do
-      for i := 0 to PaintW - 1 do
-        for j := 0 to PaintH - 1 do
-        begin
-          c := GetPixel(i, j, cr.Layers[lay]);
-          if c and 255 < 250 then
-            continue;
-          found := False;
-          for index := 0 to Length(colors)-1 do
-            if ColorDelta(colors[index], c) < 75 then
-            begin
-              found := True;
-              inc(colorscount[index]);
-              break;
-            end;
-          if not found then
-          begin
-            SetLength(colors, Length(colors)+1);
-            SetLength(colorscount, Length(colorscount)+1);
-            colors[Length(colors)-1] := (c and (not 255)) or 255;
-            colorscount[Length(colors)-1] := 1;
-          end;
-        end;
-    cr.PaletteSize := 0;
-    //omg selection sort
-    for i := 1 to MAXPALETTE do
-    begin
-      bestcount := 1;
-      besti := -1;
-      for j := 0 to Length(colorscount)-1 do
-        if colorscount[j] > bestcount then
-        begin
-          besti := j;
-          bestcount := colorscount[j];
-        end;
-      if besti > 0 then
-      begin
-        inc(cr.PaletteSize);
-        cr.Palette[cr.PaletteSize] := colors[besti];
-        if cr.PaletteSize >= MAXPALETTE then break;;
-        colorscount[besti] := 0;
-      end;
-    end;
-
-  end;
 end;
 
 end.

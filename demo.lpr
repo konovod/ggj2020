@@ -12,6 +12,7 @@ uses
 begin
   //EngineSet(Antialias, 4);
   Randomize;
+  EngineSet(Volume, 100);
   EngineSet(VSync, 1);
   EngineSet(Fullscreen, 1);
   EngineSet(Autoscale, 1);
@@ -20,7 +21,6 @@ begin
   EngineInit('./resources');
   InitCreatures;
   Stars := TStarsEngine.Create;
-  BuildPalettes;
   InitCells;
   GoFlight;
   repeat
