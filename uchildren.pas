@@ -157,7 +157,7 @@ procedure TCell.StartTimer;
 begin
   if not Filled then
     exit;
-  FoodTimer := GetTickCount64 + (5 + Random(10)) * (1000 + random(100));
+  FoodTimer := GetTickCount64 + (9 + Random(20)) * (1000 + random(100));
   case random(4) of
     0: NeedFood := Eats[Child];
     1: NeedFood := Wash;

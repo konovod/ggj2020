@@ -5,7 +5,7 @@ unit uPaint;
 interface
 
 uses
-  Classes, SysUtils, uengine, Resources, Math, uCreature;
+  Classes, SysUtils, uengine, Resources, Math, uCreature, uStars;
 
 type
   TScene = (Flight, Paint, Application);
@@ -327,6 +327,8 @@ begin
   DrawFood;
   DrawAddButtons;
   DrawDrag;
+  Stars.Draw;
+  Stars.Process;
 end;
 
 procedure DrawPaint;
@@ -450,14 +452,18 @@ begin
   //  DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
   ProcessDrag;
 
-
 {  for j := 1 to NCREATURES do
     for i := 0 to NPARTS do
       Sprite(ALL_CREATURES[j].Layers[I], 10+j*500, 400);}
+
+
+ // if MouseState(LeftButton) <> mbsUp then Stars.AddStars(10, MouseGet(CursorX),MouseGet(CursorY));
+
 end;
 
 procedure UpdateImage;
 begin
+  Stars.AddStars(15, 1628, 859);
   AppAnimal.WasFixed[AppMissing] := True;
   DrawRotatedCrunch(RES.Empty, AppAnimal.Layers[AppMissing], AppX -
     AppBaseX - 10, AppY - AppBaseY - 10, 1, 1, AppAngle);

@@ -7,7 +7,7 @@ uses
   uPaint,
   uCreature,
   uChildren,
-  uDrag;
+  uDrag, uStars;
 
 begin
   //EngineSet(Antialias, 4);
@@ -19,6 +19,7 @@ begin
   EngineSet(Height, 1080);
   EngineInit('./resources');
   InitCreatures;
+  Stars := TStarsEngine.Create;
   BuildPalettes;
   InitCells;
   GoFlight;

@@ -5,7 +5,7 @@ unit uDrag;
 interface
 
 uses
-  Classes, SysUtils, uEngine, Resources, uCreature, Math;
+  Classes, SysUtils, uEngine, Resources, uCreature, uStars, Math;
 
 type
   TDragMode = (NoDrag, DragChild, DragFood);
@@ -113,6 +113,7 @@ begin
       Result := True;
       cell.StartTimer;
       cell.SmileTimer := GetTickCount64 + 2000;
+      Stars.AddStars(10, Cell.X+Cell.W/2, Cell.Y+Cell.H/2);
     end;
     DragChild:
     begin
@@ -135,7 +136,7 @@ begin
           ALL_CELLS[DragItem].Filled := False;
           ALL_CELLS[DragItem].StopTimer;
           AppCurChild := animal;
-          //TODO well, child found
+          Stars.AddStars(100, ChildX, ChildY);
         end;
       end
       else
@@ -146,7 +147,10 @@ begin
           exit;
         //drop old item
         if DragItem < 0 then
-          AppCurChild := nil
+        begin
+          AppCurChild := nil;
+          Stars.AddStars(10, Cell.X+Cell.W/2, Cell.Y+Cell.H/2);
+        end
         else
         begin
           ALL_CELLS[DragItem].StopTimer;
