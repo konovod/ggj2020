@@ -22,7 +22,7 @@ const
   PaintMaxR = 20;
 
   MsgX = 1920/2;
-  MsgY = 100;
+  MsgY = 120;
 
   BarX = 492;
   BarY = 323;
@@ -67,6 +67,13 @@ const
   TutorX = 250;
   TutorY = 5;
 
+  CurtainX1 = 373;
+  CurtainY1 = 94;
+  CurtainW = 546;
+  CurtainH = 676;
+  CurtainX2 = CurtainX1+CurtainW;
+  CurtainY2 = CurtainY1+CurtainH;
+
 
 var
   Scene: TScene;
@@ -75,7 +82,7 @@ var
   AppMissing: integer;
   AppCurChild: TCreature;
 
-
+  CurtainScale: Single;
 
   PaintColor: TColor;
   PaintR: integer;
@@ -396,6 +403,8 @@ begin
     begin
       if MouseState(LeftButton) = mbsDown then
       begin
+        if not SoundPlaying(RES.Sounds.Stencil2,Pointer(1)) then
+          Play(RES.Sounds.Stencil2, 2, Pointer(1));
         if prevx < 0 then
         begin
           prevx := cx;
@@ -421,10 +430,15 @@ begin
         end;
       end
       else
+      begin
         prevx := -1;
+      end;
     end
     else
+    begin
+      Play(RES.Sounds.Stencil2, 0, Pointer(1));
       prevx := -1;
+    end;
 end;
 
 
@@ -440,6 +454,11 @@ begin
   //Line(AppX, AppY, (LimitX1+LimitX2)/2, (LimitY1+LimitY2)/2, BLACK);
 end;
 
+procedure DrawCurtain;
+//var
+begin
+  //Sprite();
+end;
 
 procedure DrawApplication;
 var
@@ -454,8 +473,19 @@ begin
       Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
   if SomeAction<=0 then
   begin
+    CurtainScale := 1;
     Sprite(RES.Board, AppInitialX, AppInitialY);
-    Sprite(RES.Curtain, AppBaseX, AppBaseY);
+    //Sprite(RES.Curtain, AppBaseX-CurtainPos, AppBaseY);
+    //Sprite(RES.Curtain, AppBaseX+CurtainPos, AppBaseY);
+  end
+  else
+  begin
+    if CurtainScale > 0.1 then
+    begin
+      CurtainScale := CurtainScale - 0.01;
+      //Sprite(RES.Curtain, AppBaseX-CurtainPos, AppBaseY);
+      //Sprite(RES.Curtain, AppBaseX+CurtainPos, AppBaseY);
+    end;
   end;
 
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);

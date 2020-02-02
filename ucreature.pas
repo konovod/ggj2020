@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, uEngine, Resources;
 
 const
-  NCREATURES = 3;
+  NCREATURES = 5;
   MAXPARTS = 5;
   MAXPALETTE = 7;
 
@@ -104,6 +104,50 @@ begin
     Palette[4] := $FDFDFDFF;
     Palette[5] := $BEA58BFF;
     Palette[6] := $8B7667FF;
+  end;
+
+  ALL_CREATURES[4] := TCreature.Create;
+  with ALL_CREATURES[4] do
+  begin
+    Name := 'Страуса';
+    NParts := 3;
+    Layers[0] := res_Straus_body;
+    Layers[1] := res_Straus_1; LayerNames[1] := 'Он потерял обе ноги!';
+    Layers[2] := res_Straus_2; LayerNames[2] := 'Срочно нужен хвост';
+    Layers[3] := res_Straus_3; LayerNames[3] := 'Ему нужен новый клюв';
+    Child := Bird;
+    Small := res_Elephant_small;
+    SmallName := 'потерявшийся страусенок';
+    Gender := 'ним';
+    PaletteSize := 6;
+    Palette[1] := $000000FF;
+    Palette[2] := $7C7C7CFF;
+    Palette[3] := $FA949CFF;
+    Palette[4] := $FFB3BAFF;
+    Palette[5] := $BEA58BFF;
+    Palette[6] := $F3506BFF;
+  end;
+
+  ALL_CREATURES[5] := TCreature.Create;
+  with ALL_CREATURES[5] do
+  begin
+    Name := 'Осла';
+    NParts := 3;
+    Layers[0] := res_Osel_body;
+    Layers[1] := res_Osel_1; LayerNames[1] := 'Требуется протез хвоста';
+    Layers[2] := res_Osel_2; LayerNames[2] := 'Ему нужны новые уши';
+    Layers[3] := res_Osel_3; LayerNames[3] := 'Он потерял переднюю лапы';
+    Child := Herbivore;
+    Small := res_Osel_small;
+    SmallName := 'отставший от мамы осленок';
+    Gender := 'ним';
+    PaletteSize := 6;
+    Palette[1] := $000000FF;
+    Palette[2] := $7C7C7CFF;
+    Palette[3] := $FA949CFF;
+    Palette[4] := $FFB3BAFF;
+    Palette[5] := $BEA58BFF;
+    Palette[6] := $F3506BFF;
   end;
 
 end;
