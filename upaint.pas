@@ -65,7 +65,10 @@ var
   PaintR: integer;
   PaintShape: integer = 1;
   ActiveShape: TSprite = res_Ashape1;
-  prevx, prevy: TCoord;
+  prevx, prevy, DragX, DragY: TCoord;
+  DragAngle: Boolean;
+
+  LimitX1, LimitX2, LimitY1, LimitY2: TCoord;
 
   SomeAction: int64;
 
@@ -116,6 +119,8 @@ procedure GoApplication;
 var
   ChildOK: boolean;
   cell: TCell;
+  i, j: Integer;
+  c: TColor;
 begin
   AppX := AppBaseX;
   AppY := AppBaseY;
@@ -151,6 +156,22 @@ begin
   until ChildOK;
   if not ChildOK then
     AppCurChild := nil;
+
+  LimitX1 := PaintW-1;
+  LimitX2 := 1;
+  LimitY1 := PaintH-1;
+  LimitY2 := 1;
+  for i := 0 to PaintW - 1 do
+    for j := 0 to PaintH - 1 do
+    begin
+      c := GetPixel(i,j,RES.Empty);
+      if c and 255 < 250 then
+        continue;
+      if i < LimitX1 then LimitX1 := i;
+      if i > LimitX2 then LimitX2 := i;
+      if j < LimitY1 then LimitY1 := j;
+      if j > LimitY2 then LimitY2 := j;
+    end;
 end;
 
 procedure DrawCircle(cx, cy: TCoord);
@@ -362,6 +383,20 @@ begin
       prevx := -1;
 end;
 
+
+procedure DrawRotator;
+begin
+  Rect(AppX - PaintW/2, AppY - PaintH/2, PaintW, PaintH, False, $000000FF, $000000FF, $000000FF, $000000FF, AppAngle);
+  //Rect(AppX - PaintW/2 + LimitX1, AppY - PaintH/2 + LimitY1, LimitX2-LimitX1, LimitY2-LimitY1, False, $000000FF, $000000FF, $000000FF, $000000FF, AppAngle);
+  LineSettings(1, $00440044, 100);
+  DragX := AppX+250*cos(AppAngle/180*Pi);
+  DragY := AppY-250*sin(AppAngle/180*Pi);
+  Sprite(RES.Rotate, DragX, DragY, 1,1,AppAngle);
+  Line(AppX, AppY, DragX, DragY, BLACK);
+  //Line(AppX, AppY, (LimitX1+LimitX2)/2, (LimitY1+LimitY2)/2, BLACK);
+end;
+
+
 procedure DrawApplication;
 var
   i: integer;
@@ -370,6 +405,7 @@ begin
     if i <> AppMissing then
       Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
+  DrawRotator;
 
   if (AppCurChild <> nil) and ((DragMode <> DragChild) or (DragItem <> -1)) then
     Sprite(AppCurChild.Small, ChildX, ChildY);
@@ -381,11 +417,17 @@ begin
       begin
         prevx := MouseGet(CursorX);
         prevy := MouseGet(CursorY);
+        DragAngle := hypot(prevx-DragX, prevy-DragY) < 35;
       end
       else
       begin
-        AppX := AppX + MouseGet(CursorX) - prevx;
-        AppY := AppY + MouseGet(CursorY) - prevy;
+        if DragAngle then
+          AppAngle := -arctan2(MouseGet(CursorY) - AppY, MouseGet(CursorX) - AppX) / pi * 180
+        else
+        begin
+          AppX := AppX + MouseGet(CursorX) - prevx;
+          AppY := AppY + MouseGet(CursorY) - prevy;
+        end;
         if SomeAction < 0 then
           SomeAction := GetTickCount64 + 4000;
         prevx := MouseGet(CursorX);

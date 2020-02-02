@@ -44,7 +44,7 @@ begin
     Layers[0] := res_Tukan_body;
     Layers[1] := res_Tukan_1; LayerNames[1] := 'нужна замена клюва';
     Layers[2] := res_Tukan_2; LayerNames[2] := 'нужен новый хвост';
-    Layers[3] := res_Tukan_2; LayerNames[3] := 'требуется замена глаза';
+    Layers[3] := res_Tukan_3; LayerNames[3] := 'требуется замена глаза';
     Child := Bird;
     Small := res_Tukan_small;
   end;
