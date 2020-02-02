@@ -35,6 +35,8 @@ type
   TFoodData = record
     X, Y: TCoord;
     Img: TSprite;
+    Sound: TSound;
+    Volume: Single;
   end;
 
 const
@@ -57,12 +59,12 @@ const
   FoodH = 164;
 
   FOOD_POS: array[TFood] of TFoodData = (
-    (X: 347; Y: 835; Img: res_Fish),
-    (X: 562; Y: 835; Img: res_Meat),
-    (X: 776; Y: 835; Img: res_Grass),
-    (X: 990; Y: 835; Img: res_Maracas),
-    (X: 1205; Y: 835; Img: res_Wash),
-    (X: 1419; Y: 835; Img: res_Aid)
+    (X: 347; Y: 835; Img: res_Fish; Sound: res_Meat_1; Volume: 100),
+    (X: 562; Y: 835; Img: res_Meat; Sound: res_Meat_1; Volume: 100),
+    (X: 776; Y: 835; Img: res_Grass; Sound: res_Grass_1; Volume: 100),
+    (X: 990; Y: 835; Img: res_Maracas; Sound: res_Play; Volume: 100),
+    (X: 1205; Y: 835; Img: res_Wash; Sound: res_Wash_1; Volume: 20),
+    (X: 1419; Y: 835; Img: res_Aid; Sound: res_Aid_1; Volume: 100)
     );
 
   Eats: array[TChild] of TFood = (Grass, Fish, Meat);

@@ -80,7 +80,7 @@ begin
 
     if (d < 100) and ((sign(Flying[i].VX) = sign(dx)) or (sign(Flying[i].VY) = sign(dy))) then
     begin
-      Play(RES.Sounds.Star2);
+      Play(RES.Sounds.Star1);
       Flying[i] := Flying[totaln-1];
       dec(totaln);
       Inc(Counter);
@@ -99,9 +99,9 @@ begin
   begin
     Flying[Length(Flying) - i] := MakeStar(x+random(50), y+random(50), random(StarsInitial), random(StarsInitial));
   end;
-  for i := 1 to count div 5 do
+  //for i := 1 to count div 5 do
   begin
-    Play(RES.Sounds.Star1);
+    Play(RES.Sounds.Star2);
     //sleep(15);
   end;
 end;

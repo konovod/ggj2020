@@ -8,8 +8,8 @@ uses
   Classes, SysUtils, uEngine, Resources;
 
 const
-  NCREATURES = 2;
-  MAXPARTS = 3;
+  NCREATURES = 3;
+  MAXPARTS = 5;
   MAXPALETTE = 7;
 
 type
@@ -80,6 +80,30 @@ begin
     Palette[2] := $FFFFFFFF;
     Palette[3] := $B6A48BFF;
     Palette[4] := $5E191DFF;
+  end;
+
+  ALL_CREATURES[3] := TCreature.Create;
+  with ALL_CREATURES[3] do
+  begin
+    Name := 'Слона';
+    NParts := 5;
+    Layers[0] := res_Slon_body;
+    Layers[1] := res_Slon_1; LayerNames[1] := 'Он потерял бивень';
+    Layers[2] := res_Slon_2; LayerNames[2] := 'Срочно нужен хобот';
+    Layers[3] := res_Slon_3; LayerNames[3] := 'Ему нужен новый хвост';
+    Layers[4] := res_Slon_4; LayerNames[4] := 'Требуется протез передней ноги';
+    Layers[5] := res_Slon_5; LayerNames[5] := 'Требуется протез задней ноги';
+    Child := Herbivore;
+    Small := res_Elephant_small;
+    SmallName := 'заблудившийся слоненок';
+    Gender := 'ним';
+    PaletteSize := 6;
+    Palette[1] := $898989FF;
+    Palette[2] := $7C7C7CFF;
+    Palette[3] := $545454FF;
+    Palette[4] := $FDFDFDFF;
+    Palette[5] := $BEA58BFF;
+    Palette[6] := $8B7667FF;
   end;
 
 end;

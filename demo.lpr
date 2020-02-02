@@ -12,13 +12,14 @@ uses
 begin
   //EngineSet(Antialias, 4);
   Randomize;
-  EngineSet(Volume, 100);
+  EngineSet(Volume, 40);
   EngineSet(VSync, 1);
   EngineSet(Fullscreen, 1);
   EngineSet(Autoscale, 1);
   EngineSet(Width, 1920);
   EngineSet(Height, 1080);
   EngineInit('./resources');
+  Music(RES.Sounds.Music);
   InitCreatures;
   Stars := TStarsEngine.Create;
   InitCells;

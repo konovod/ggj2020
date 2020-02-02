@@ -107,14 +107,21 @@ begin
       if not Assigned(cell) then
         exit;
       if (cell.FoodTimer <= 0) or (cell.FoodTimer > GetTickCount64) then
+      begin
+        Play(FOOD_POS[uChildren.TFood(DragItem)].Sound, FOOD_POS[uChildren.TFood(DragItem)].Volume);
+        if (random < 0.25) then
+          cell.SmileTimer := GetTickCount64 + 1000;
         exit;
+      end;
       if cell.NeedFood <> uChildren.TFood(DragItem) then
       begin
         cell.PokerTimer := GetTickCount64 + 1000;
+        Play(FOOD_POS[uChildren.TFood(DragItem)].Sound, FOOD_POS[uChildren.TFood(DragItem)].Volume);
         exit;
       end;
       Result := True;
       cell.StartTimer;
+      Play(FOOD_POS[uChildren.TFood(DragItem)].Sound, FOOD_POS[uChildren.TFood(DragItem)].Volume);
       cell.SmileTimer := GetTickCount64 + 2000;
       FirstFood := False;
       Stars.AddStars(10, Cell.X+Cell.W/2, Cell.Y+Cell.H/2);

@@ -430,7 +430,7 @@ end;
 
 procedure DrawRotator;
 begin
-  Rect(AppX - PaintW/2, AppY - PaintH/2, PaintW, PaintH, False, $000000FF, $000000FF, $000000FF, $000000FF, AppAngle);
+  //Rect(AppX - PaintW/2, AppY - PaintH/2, PaintW, PaintH, False, $000000FF, $000000FF, $000000FF, $000000FF, AppAngle);
   //Rect(AppX - PaintW/2 + LimitX1, AppY - PaintH/2 + LimitY1, LimitX2-LimitX1, LimitY2-LimitY1, False, $000000FF, $000000FF, $000000FF, $000000FF, AppAngle);
   LineSettings(1, $00440044, 100);
   DragX := AppX+250*cos(AppAngle/180*Pi);
@@ -517,7 +517,7 @@ begin
       Sprite(ALL_CREATURES[j].Layers[I], 10+j*500, 400);}
 
 
- // if MouseState(LeftButton) <> mbsUp then Stars.AddStars(10, MouseGet(CursorX),MouseGet(CursorY));
+  //if MouseState(LeftButton) <> mbsUp then Stars.AddStars(10, MouseGet(CursorX),MouseGet(CursorY));
 
 end;
 
