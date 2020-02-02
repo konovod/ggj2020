@@ -12,6 +12,8 @@ type
 
 const
 
+  BackgroundColor = $FBEADCFF;
+
   PrinterX = 434;
   PrinterY = 39;
   PrinterW = 1102;
@@ -23,8 +25,8 @@ const
   PaintH = 600;
   PaintMaxR = 20;
 
-  MsgX = 656;
-  MsgY = 150;
+  MsgX = 1920/2;
+  MsgY = 100;
 
   BarX = 492;
   BarY = 323;
@@ -45,8 +47,8 @@ const
 
   ChildX = 1213;
   ChildY = 661;
-  AppBaseX = 832;
-  AppBaseY = 542;
+  AppBaseX = 957;
+  AppBaseY = 410;
 
   ChildCaptureX = 0.33;
   ChildCaptureY = 0.5;
@@ -187,7 +189,7 @@ begin
   Scene := Flight;
   AppAnimal := ALL_CREATURES[Random(NCREATURES) + 1];
   repeat
-    AppMissing := Random(NPARTS) + 1;
+    AppMissing := Random(AppAnimal.NParts) + 1;
   until (not AppAnimal.WasFixed[AppMissing]) or (random < 0.1);
   SomeAction := GetTickCount64;
 end;
@@ -195,7 +197,7 @@ end;
 function ShowPaintColor: TColor;
 begin
   if PaintColor = 0 then
-    Result := $FFFFFFFF
+    Result := BackgroundColor
   else
     Result := PaintColor;
 end;
@@ -259,7 +261,7 @@ begin
   end;
 
   if index = 0 then
-    toshow := $FFFFFFFF
+    toshow := BackgroundColor
   else
     toshow := AppAnimal.Palette[Index];
 
@@ -403,7 +405,7 @@ procedure DrawApplication;
 var
   i: integer;
 begin
-  for i := 0 to NPARTS do
+  for i := 0 to AppAnimal.NParts do
     if i <> AppMissing then
       Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
@@ -447,9 +449,8 @@ var
   i, j: integer;
 begin
   FontConfig(RES.Vera, 48, BLACK);
-  DrawText(RES.Vera, PChar('К вам везут ' + AppAnimal.Name +
-    #13#10'Ему срочно ' + AppAnimal.LayerNames[AppMissing]), MsgX, MsgY);
-  //  DrawText(RES.Vera, PChar(AppAnimal^.Name+' ждет новый '+AppAnimal^.LayerNames[AppMissing]), MsgX, MsgY);
+  DrawTextBoxed(RES.Vera, PChar('К вам везут ' + AppAnimal.Name +
+    #13#10+AppAnimal.LayerNames[AppMissing]), MsgX-500, MsgY-500, 1000, 1000, haCenter, vaCenter);
   ProcessDrag;
 
 {  for j := 1 to NCREATURES do
@@ -490,13 +491,17 @@ var
   colors: array of TColor;
   colorscount: array of TColor;
 begin
+  for cr in ALL_CREATURES do
+    for i := 1 to cr.PaletteSize do
+      cr.Palette[i] := (cr.Palette[i] and (not 255)) or 255;
+  exit;
   for crindex := 1 to NCREATURES do
   begin
     cr := ALL_CREATURES[crindex];
 
     SetLength(colors, 0);
     SetLength(colorscount, 0);
-    for lay := 0 to NPARTS do
+    for lay := 0 to cr.NParts do
       for i := 0 to PaintW - 1 do
         for j := 0 to PaintH - 1 do
         begin

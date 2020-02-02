@@ -9,7 +9,7 @@ uses
 
 const
   NCREATURES = 2;
-  NPARTS = 3;
+  MAXPARTS = 3;
   MAXPALETTE = 7;
 
 type
@@ -19,13 +19,14 @@ type
 
   TCreature = class
     Name: string;
-    Layers: array[0..NPARTS] of TSprite;
-    LayerNames: array[1..NPARTS] of string;
+    NParts: Integer;
+    Layers: array[0..MAXPARTS] of TSprite;
+    LayerNames: array[1..MAXPARTS] of string;
     Child: TChild;
     Small: TSprite;
     PaletteSize: integer;
     Palette: array[1..MAXPALETTE] of TColor;
-    WasFixed: array[1..NPARTS] of boolean;
+    WasFixed: array[1..MAXPARTS] of boolean;
   end;
 
 
@@ -41,24 +42,38 @@ begin
   with ALL_CREATURES[1] do
   begin
     Name := 'Тукана';
+    NParts := 2;
     Layers[0] := res_Tukan_body;
-    Layers[1] := res_Tukan_1; LayerNames[1] := 'нужна замена клюва';
-    Layers[2] := res_Tukan_2; LayerNames[2] := 'нужен новый хвост';
-    Layers[3] := res_Tukan_3; LayerNames[3] := 'требуется замена глаза';
+    Layers[1] := res_Tukan_1; LayerNames[1] := 'Ему срочно нужна замена клюва';
+    Layers[2] := res_Tukan_2; LayerNames[2] := 'Требуется протезирование поврежденных лапок';
     Child := Bird;
     Small := res_Tukan_small;
+    PaletteSize := 7;
+    Palette[1] := $000000FF;
+    Palette[2] := $1B1B48FF;
+    Palette[3] := $FFFFFFFF;
+    Palette[4] := $D24A43FF;
+    Palette[5] := $FFFF00FF;
+    Palette[6] := $3EB5F1FF;
+    Palette[7] := $00FF00FF;
   end;
 
   ALL_CREATURES[2] := TCreature.Create;
   with ALL_CREATURES[2] do
   begin
-    Name := 'Слона';
-    Layers[0] := res_Elephant_body;
-    Layers[1] := res_Elephant_1; LayerNames[1] := 'нужен искусственный хобот';
-    Layers[2] := res_Elephant_2; LayerNames[2] := 'нужен новый хвост';
-    Layers[3] := res_Elephant_3; LayerNames[3] := 'требуется протез ноги';
+    Name := 'Зебру';
+    NParts := 3;
+    Layers[0] := res_Zebra_body;
+    Layers[1] := res_Zebra_1; LayerNames[1] := 'Ей нужна искусственная нога';
+    Layers[2] := res_Zebra_2; LayerNames[2] := 'Ей необходимо протезирование ушей';
+    Layers[3] := res_Zebra_3; LayerNames[3] := 'Ей требуется новый хвост';
     Child := Herbivore;
-    Small := res_Elephant_small;
+    Small := res_Zebra_small;
+    PaletteSize := 4;
+    Palette[1] := $00000000;
+    Palette[2] := $FFFFFFFF;
+    Palette[3] := $B6A48BFF;
+    Palette[4] := $5E191DFF;
   end;
 
 end;
