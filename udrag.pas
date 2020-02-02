@@ -109,7 +109,10 @@ begin
       if (cell.FoodTimer <= 0) or (cell.FoodTimer > GetTickCount64) then
         exit;
       if cell.NeedFood <> uChildren.TFood(DragItem) then
+      begin
+        cell.PokerTimer := GetTickCount64 + 1000;
         exit;
+      end;
       Result := True;
       cell.StartTimer;
       cell.SmileTimer := GetTickCount64 + 2000;

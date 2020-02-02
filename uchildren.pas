@@ -22,6 +22,7 @@ type
     Parent: TCreature;
     FoodTimer: int64;
     SmileTimer: int64;
+    PokerTimer: int64;
     NeedFood: TFood;
     PreImg, Img: TSprite;
 
@@ -119,7 +120,7 @@ begin
     SmileY := Y + H / 4;
     SmileK := 1;
     Child := Bird;
-    Img := RES.Cells.Nest;
+    Img := RES.Cells.Nest2;
     PreImg := RES.Cells.Nest;
   end;
 
@@ -160,11 +161,12 @@ begin
       scale := 0.95;
     if (SmileTimer > GetTickCount64) then
       Sprite(RES.Happy, SmileX, SmileY, SmileK*scale, scale)
+    else if (PokerTimer > GetTickCount64) then
+      Sprite(RES.Poker, SmileX, SmileY, SmileK*scale, scale)
     else if (FoodTimer > 0) and (FoodTimer < GetTickCount64) then
       Sprite(RES.Cry, SmileX, SmileY, SmileK*scale, scale)
   end;
   Sprite(Img, X + W / 2, Y + H / 2);
-
 end;
 
 procedure TCell.StartTimer;
@@ -184,6 +186,7 @@ procedure TCell.StopTimer;
 begin
   FoodTimer := -1;
   SmileTimer := -1;
+  PokerTimer := -1;
 end;
 
 end.
