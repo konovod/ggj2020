@@ -423,8 +423,10 @@ begin
   for i := 0 to AppAnimal.NParts do
     if i <> AppMissing then
       Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
+  if SomeAction<=0 then
+    Sprite(RES.Board, AppX, AppY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
-  if not HideApps then
+  if (not HideApps) and SomeAction then
     DrawRotator;
 
   if (AppCurChild <> nil) and ((DragMode <> DragChild) or (DragItem <> -1)) then
