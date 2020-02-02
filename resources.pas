@@ -4,7 +4,7 @@ interface
 {$J-}
 type
 TRawResource = (TRawResource_NOT_USED);
-TSprite = (THE_SCREEN = -1, res_Osel_1, res_Osel_2, res_Osel_3, res_Osel_body, res_Slon_1, res_Slon_2, res_Slon_3, res_Slon_4, res_Slon_5, res_Slon_body, res_Straus_1, res_Straus_2, res_Straus_3, res_Straus_body, res_Tukan_1, res_Tukan_2, res_Tukan_body, res_Zebra_1, res_Zebra_2, res_Zebra_3, res_Zebra_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Nest2, res_Elephant_small, res_Osel_small, res_Tukan_small, res_Zebra_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Board, res_Cry, res_Curtain, res_Empty, res_Empty2, res_Happy, res_Loading_back, res_Poker, res_Printer, res_Rotate, res_Star, res_Title, res_Title0, res_Wall);
+TSprite = (THE_SCREEN = -1, res_Osel_1, res_Osel_2, res_Osel_3, res_Osel_body, res_Slon_1, res_Slon_2, res_Slon_3, res_Slon_4, res_Slon_5, res_Slon_body, res_Straus_1, res_Straus_2, res_Straus_3, res_Straus_body, res_Tukan_1, res_Tukan_2, res_Tukan_body, res_Zebra_1, res_Zebra_2, res_Zebra_3, res_Zebra_body, res_Cell, res_Fence, res_Fence2, res_Nest, res_Nest2, res_Elephant_small, res_Osel_small, res_Straus_egg, res_Tukan_small, res_Zebra_small, res_Aid, res_Fish, res_Grass, res_Maracas, res_Meat, res_Wash, res_Ashape1, res_Ashape2, res_Ashape3, res_Ashape4, res_Back, res_Board, res_Cry, res_Curtain, res_Empty, res_Empty2, res_Happy, res_Loading_back, res_Poker, res_Printer, res_Rotate, res_Star, res_Title, res_Title0, res_Wall);
 TSound = (NO_MUSIC = -1, res_Aid_1, res_Grass_1, res_Meat_1, res_Music, res_Play, res_Star1, res_Star2, res_Starhit1, res_Starhit2, res_Stencil1, res_Stencil2, res_Stencil3, res_Wash_1);
 TButton = (res_Go, res_Settings, res_Stop, res_World, res_Bar, res_Color, res_Shape1, res_Shape2, res_Shape3, res_Shape4);
 TTileMap = (TTileMap_NOT_USED);
@@ -46,6 +46,7 @@ end;
 TChildren = record
   Elephant_small: TSprite;
   Osel_small: TSprite;
+  Straus_egg: TSprite;
   Tukan_small: TSprite;
   Zebra_small: TSprite;
 end;
@@ -157,6 +158,7 @@ const RES: TRES = (
   Children: (
     Elephant_small: res_Elephant_small;
     Osel_small: res_Osel_small;
+    Straus_egg: res_Straus_egg;
     Tukan_small: res_Tukan_small;
     Zebra_small: res_Zebra_small;
   );

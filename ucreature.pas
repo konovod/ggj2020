@@ -116,7 +116,7 @@ begin
     Layers[2] := res_Straus_2; LayerNames[2] := 'Срочно нужен хвост';
     Layers[3] := res_Straus_3; LayerNames[3] := 'Ему нужен новый клюв';
     Child := Bird;
-    Small := res_Elephant_small;
+    Small := res_Straus_egg;
     SmallName := 'потерявшийся страусенок';
     Gender := 'ним';
     PaletteSize := 6;
@@ -142,12 +142,12 @@ begin
     SmallName := 'отставший от мамы осленок';
     Gender := 'ним';
     PaletteSize := 6;
-    Palette[1] := $000000FF;
-    Palette[2] := $7C7C7CFF;
-    Palette[3] := $FA949CFF;
-    Palette[4] := $FFB3BAFF;
-    Palette[5] := $BEA58BFF;
-    Palette[6] := $F3506BFF;
+    Palette[1] := $E2791AFF;
+    Palette[2] := $E7F2F2FF;
+    Palette[3] := $CC6612FF;
+    Palette[4] := $000000FF;
+    Palette[5] := $FFFFFFFF;
+    Palette[6] := $CCC6C2FF;
   end;
 
 end;
