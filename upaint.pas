@@ -455,9 +455,17 @@ begin
 end;
 
 procedure DrawCurtain;
-//var
+var
+  x,y,w,h: TCoord;
 begin
-  //Sprite();
+  x := CurtainX1;
+  y := CurtainY1;
+  w := CurtainW * CurtainScale;
+  h := CurtainH;
+  Sprite(RES.Curtain, x+w/2, y+h/2, CurtainScale, 1);
+  y := CurtainY1;
+  x := CurtainX2+CurtainW - w;
+  Sprite(RES.Curtain, x+w/2, y+h/2, CurtainScale, 1);
 end;
 
 procedure DrawApplication;
@@ -475,16 +483,14 @@ begin
   begin
     CurtainScale := 1;
     Sprite(RES.Board, AppInitialX, AppInitialY);
-    //Sprite(RES.Curtain, AppBaseX-CurtainPos, AppBaseY);
-    //Sprite(RES.Curtain, AppBaseX+CurtainPos, AppBaseY);
+    DrawCurtain;
   end
   else
   begin
-    if CurtainScale > 0.1 then
+    if CurtainScale > 0.2 then
     begin
       CurtainScale := CurtainScale - 0.01;
-      //Sprite(RES.Curtain, AppBaseX-CurtainPos, AppBaseY);
-      //Sprite(RES.Curtain, AppBaseX+CurtainPos, AppBaseY);
+      DrawCurtain;
     end;
   end;
 

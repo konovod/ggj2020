@@ -159,6 +159,7 @@ begin
   if Filled and ((DragMode <> DragChild) or (DragItem <> Index)) then
   begin
     Sprite(Parent.Small, X + W / 2, Y + H / 2);
+    SetLayer(101);
     if GetTickCount64 mod 1000 > 450 then
       scale := 1.1
     else
@@ -173,6 +174,7 @@ begin
         DrawText(RES.Font2, PChar('Успокойте детеныша с помощью нижнего ряда развлечений'), TutorX, TutorY);
       Sprite(RES.Cry, SmileX, SmileY, SmileK*scale, scale)
     end;
+    SetLayer(1);
   end;
   Sprite(Img, X + W / 2, Y + H / 2);
 end;
