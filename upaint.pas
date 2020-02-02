@@ -78,6 +78,7 @@ var
   ActiveShape: TSprite = res_Ashape1;
   prevx, prevy, DragX, DragY: TCoord;
   DragAngle: Boolean;
+  HideApps: Boolean;
 
   LimitX1, LimitX2, LimitY1, LimitY2: TCoord;
 
@@ -129,6 +130,7 @@ var
   i, j: Integer;
   c: TColor;
 begin
+  HideApps := False;
   AppX := AppBaseX;
   AppY := AppBaseY;
   AppAngle := 0;
@@ -325,10 +327,13 @@ begin
     Flight: GoPaint;
     Paint: GoApplication;
     Application:
-    begin
-      UpdateImage;
-      GoFlight;
-    end;
+      if HideApps then
+      begin
+        UpdateImage;
+        GoFlight;
+      end
+      else
+        HideApps := True;
   end;
 end;
 
@@ -419,7 +424,8 @@ begin
     if i <> AppMissing then
       Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
-  DrawRotator;
+  if not HideApps then
+    DrawRotator;
 
   if (AppCurChild <> nil) and ((DragMode <> DragChild) or (DragItem <> -1)) then
     Sprite(AppCurChild.Small, ChildX, ChildY);
@@ -452,6 +458,8 @@ begin
       prevx := -1;
   if MouseGet(ScrollPos) <> 0 then
     AppAngle := AppAngle + MouseGet(ScrollPos) * 4;
+  //if HideApps then
+  //  Sprite(RES.Happy, 1000, 1000,);
 end;
 
 procedure DrawFlight;
@@ -459,12 +467,12 @@ var
   i, j: integer;
   s: string;
 begin
-  FontConfig(RES.Vera, 48, BLACK);
+  FontConfig(RES.Font2, 48, BLACK);
   s := 'К вам везут ' + AppAnimal.Name +
     #13#10+AppAnimal.LayerNames[AppMissing];
   if AppCurChild <> nil then
   s := s+#13#10+'С '+AppAnimal.Gender+' - '+AppCurChild.SmallName+'!';
-  DrawTextBoxed(RES.Vera, PChar(s), MsgX-500, MsgY-500, 1000, 1000, haCenter, vaCenter);
+  DrawTextBoxed(RES.Font2, PChar(s), MsgX-1000, MsgY-1000, 2000, 2000, haCenter, vaCenter);
   ProcessDrag;
 
 {  for j := 1 to NCREATURES do

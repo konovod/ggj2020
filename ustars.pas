@@ -55,11 +55,11 @@ procedure TStarsEngine.Draw;
 var
   i: Integer;
 begin
+  FontConfig(RES.Font1, 48, BLACK);
   Sprite(RES.Star, ScoresX, ScoresY);
-  DrawText(RES.Vera, PChar(IntToStr(Counter)), ScoresX+30, ScoresY-30);
+  DrawText(RES.Font1, PChar(IntToStr(Counter)), ScoresX+30, ScoresY-30);
   for i := 0 to Length(Flying)-1 do
     Sprite(RES.Star, Flying[i].X, Flying[i].Y, 0.5, 0.5);
-
 end;
 
 procedure TStarsEngine.Process;

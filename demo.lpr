@@ -24,6 +24,10 @@ begin
   InitCells;
   GoFlight;
   repeat
+    Background(RES.Loading_back);
+    EngineProcess;
+  until (KeyState(AnyKey) = ksDown) or (MouseState(LeftButton) = mbsClicked)or (MouseState(RightButton) = mbsClicked);
+  repeat
     DrawScene;
     EngineProcess;
   until (KeyState(Quit) <> ksUp) or (KeyState(KeyEscape) <> ksUp);
