@@ -41,11 +41,13 @@ const
   ColorDX = 110;
   ColorDY = 75;
 
-  ChildX = 1213;
+  ChildX = 1513;
   ChildY = 661;
 
   AppBaseX = 957;
   AppBaseY = 410;
+  AppInitialX = 257+389/2;
+  AppInitialY = 392+379/2;
   AnimalW = 1170;
   AnimalH = 730;
 
@@ -61,6 +63,9 @@ const
 
   CrunchDX = (AnimalW-PaintW)/2-10;
   CrunchDY = (AnimalH-PaintH)/2-10;
+
+  TutorX = 250;
+  TutorY = 5;
 
 
 var
@@ -84,6 +89,11 @@ var
 
   SomeAction: int64;
 
+  FirstMessage: Boolean = true;
+  FirstApplication: Boolean = true;
+  FirstPaint: Boolean = true;
+  FirstFood: Boolean = true;
+  ShowTitle: Boolean = false;
 
 procedure DrawScene;
 
@@ -119,6 +129,7 @@ end;
 
 procedure GoPaint;
 begin
+  FirstMessage := False;
   Scene := Paint;
   PaintColor := AppAnimal.Palette[Random(AppAnimal.PaletteSize)+1];
   PaintR := 7+random(5);
@@ -130,9 +141,10 @@ var
   i, j: Integer;
   c: TColor;
 begin
+  FirstPaint := False;
   HideApps := False;
-  AppX := AppBaseX;
-  AppY := AppBaseY;
+  AppX := AppInitialX;
+  AppY := AppInitialY;
   AppAngle := 0;
   Scene := Application;
   SomeAction := -1;
@@ -308,7 +320,8 @@ end;
 
 procedure DrawAddButtons;
 begin
-  Button(RES.Hud.Settings, 0, 57, 890, 59, 61);
+  if Button(RES.Hud.Settings, 0, 57, 890, 59, 61) = bsClicked then
+    ShowTitle := True;
   Button(RES.Hud.World, 0, 190, 885, 70, 70);
   if (SomeAction >= 0) and (SomeAction < GetTickCount64) then
   begin
@@ -346,12 +359,24 @@ begin
   DrawDrag;
   Stars.Draw;
   Stars.Process;
+
+  if ShowTitle then
+  begin
+    SetLayer(120);
+    Sprite(RES.Title0, 1920/2, 780/2);
+    Sprite(RES.Title, 1920/2, 780/2);
+    if (KeyState(AnyKey) <> ksUp) or (MouseState(LeftButton) = mbsDown) then
+      ShowTitle := False;
+    SetLayer(1);
+  end;
 end;
 
 procedure DrawPaint;
 var
   cx, cy, dx, dy, dh, step: TCoord;
 begin
+  if FirstPaint then
+    DrawText(RES.Font2, PChar('Нарисуйте изготавливаемую часть часть на 3д-принтере'), TutorX, TutorY);
   Sprite(RES.Printer, PrinterX + PrinterW / 2, PrinterY + PrinterH / 2);
   DrawBar;
 
@@ -420,13 +445,19 @@ procedure DrawApplication;
 var
   i: integer;
 begin
+  if FirstApplication then
+    DrawText(RES.Font2, PChar('Приложите изготовленную часть к пациенту'), TutorX, TutorY);
   if not HideApps then
     Sprite(RES.Wall, 356+1205/2, 79+693/2);
   for i := 0 to AppAnimal.NParts do
     if i <> AppMissing then
       Sprite(AppAnimal.Layers[I], AppBaseX, AppBaseY);
   if SomeAction<=0 then
-    Sprite(RES.Board, AppX, AppY);
+  begin
+    Sprite(RES.Board, AppInitialX, AppInitialY);
+    Sprite(RES.Curtain, AppBaseX, AppBaseY);
+  end;
+
   Sprite(RES.Empty, AppX, AppY, 1, 1, AppAngle);
   if (not HideApps) and (SomeAction>0) then
     DrawRotator;
@@ -472,12 +503,13 @@ var
   s: string;
 begin
   FontConfig(RES.Font2, 48, BLACK);
-  s := 'Док, К вам везут ' + AppAnimal.Name +
+  s := '- Док, К вам везут ' + AppAnimal.Name +
     #13#10+AppAnimal.LayerNames[AppMissing];
   if AppCurChild <> nil then
     s := s+#13#10+'С '+AppAnimal.Gender+' - '+AppCurChild.SmallName+'!';
-  //s := s+#13#10+#13#10+'{Jhjij'
   DrawTextBoxed(RES.Font2, PChar(s), MsgX-1000, MsgY-1000, 2000, 2000, haCenter, vaCenter);
+  if FirstMessage then
+    DrawTextBoxed(RES.Font2, PChar('- Хорошо, можно взглянуть на пациента?'+#13#10+'- Нельзя.'), MsgX-1000, MsgY+150-1000, 2000, 2000, haCenter, vaCenter);
   ProcessDrag;
 
 {  for j := 1 to NCREATURES do
@@ -491,6 +523,7 @@ end;
 
 procedure UpdateImage;
 begin
+  FirstApplication := False;
   Stars.AddStars(15, 1628, 859);
   AppAnimal.WasFixed[AppMissing] := True;
   DrawRotatedCrunch(RES.Empty, AppAnimal.Layers[AppMissing], AppX -

@@ -74,6 +74,8 @@ procedure InitCells;
 
 implementation
 
+uses uPaint;
+
 
 procedure InitCells;
 begin
@@ -164,7 +166,11 @@ begin
     else if (PokerTimer > GetTickCount64) then
       Sprite(RES.Poker, SmileX, SmileY, SmileK*scale, scale)
     else if (FoodTimer > 0) and (FoodTimer < GetTickCount64) then
+    begin
+      if FirstFood and (not FirstPaint)and (not FirstApplication)  then
+        DrawText(RES.Font2, PChar('Успокойте детеныша с помощью нижнего ряда развлечений'), TutorX, TutorY);
       Sprite(RES.Cry, SmileX, SmileY, SmileK*scale, scale)
+    end;
   end;
   Sprite(Img, X + W / 2, Y + H / 2);
 end;

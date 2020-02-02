@@ -116,6 +116,7 @@ begin
       Result := True;
       cell.StartTimer;
       cell.SmileTimer := GetTickCount64 + 2000;
+      FirstFood := False;
       Stars.AddStars(10, Cell.X+Cell.W/2, Cell.Y+Cell.H/2);
     end;
     DragChild:
